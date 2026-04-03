@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:errendi.com)",
+      "Bash(curl -sL \"https://errendi.com/tools/Cruscotto_zes_sito.html\")",
+      "Bash(curl -sL \"https://errendi.com/tools/Cruscotto_zes_sito.html\" -o /tmp/cruscotto_full.html)",
+      "Read(//tmp/**)",
+      "Bash(/c/Python314/python -c ':*)",
+      "Bash(ls /tmp/cruscotto*)",
+      "Read(//c/Users/massa/AppData/Local/Temp/**)",
+      "Bash(python3)",
+      "Bash(python3 merge_script.py)",
+      "Bash(python merge_script.py)"
+    ],
+    "additionalDirectories": [
+      "\\tmp",
+      "C:\\Users\\massa\\AppData\\Local\\Temp"
+    ]
+  }
+}

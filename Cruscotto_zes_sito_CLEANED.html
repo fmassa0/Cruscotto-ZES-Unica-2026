@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cruscotto Operativo ZES Unica 2026-2028</title>
+    <style>
+        :root {
+            --primary: #7B3010;
+            --primary-light: #C4591A;
+            --accent: #F0A020;
+            --success: #2E7D7D;
+            --warning: #d69e2e;
+            --bg: #fdf8f4;
+            --card-bg: #ffffff;
+            --text: #2d2d2d;
+            --text-light: #7a6a5a;
+            --border: #e8ddd4;
+            --iper: #2E7D7D;
+            --iper-light: #3a9a9a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); }
+
+        .header {
+            background: linear-gradient(135deg, #5C2008, #7B3010, #C4591A);
+            color: white; padding: 20px 32px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        .header h1 { font-size: 1.5rem; font-weight: 700; }
+        .header .subtitle { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+        .header .badge { background: var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+
+        .tabs {
+            display: flex; background: #5C2008; padding: 0 32px;
+            border-bottom: 3px solid var(--accent); overflow-x: auto;
+        }
+        .tab {
+            padding: 12px 20px; color: rgba(255,255,255,0.7); cursor: pointer;
+            font-size: 0.85rem; font-weight: 500; border: none; background: none;
+            transition: all 0.2s; position: relative; white-space: nowrap;
+        }
+        .tab:hover { color: white; background: rgba(255,255,255,0.1); }
+        .tab.active { color: white; background: rgba(255,255,255,0.15); }
+        .tab.active::after {
+            content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+            height: 3px; background: var(--accent);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .card {
+            background: var(--card-bg); border-radius: 12px; padding: 24px;
+            margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+        .card h2 { font-size: 1.15rem; color: #7B3010; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #F0A020; padding-bottom: 10px; }
+        .card h3 { font-size: 1rem; color: var(--primary-light); margin: 16px 0 10px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full { grid-column: 1 / -1; }
+        .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text-light); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group select {
+            padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 0.95rem; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,54,93,0.1); }
+
+        .checklist { list-style: none; }
+        .checklist li {
+            padding: 10px 14px; border-radius: 8px; margin-bottom: 6px;
+            display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem;
+            background: #f7fafc; border: 1px solid var(--border);
+        }
+        .checklist li .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+        .check-ok { color: var(--success); }
+        .check-ko { color: var(--accent); }
+        .check-warn { color: var(--warning); }
+
+        .result-box {
+            background: linear-gradient(135deg, #fdf3ea, #fce0c0);
+            border: 2px solid #C4591A; border-radius: 12px; padding: 20px;
+            margin-top: 16px;
+        }
+        .result-box.warning { background: linear-gradient(135deg, #fffff0, #fefcbf); border-color: var(--warning); }
+        .result-box.error { background: linear-gradient(135deg, #fff5f5, #fed7d7); border-color: var(--accent); }
+        .result-box.success { background: linear-gradient(135deg, #f0faf8, #c0ebe6); border-color: var(--success); }
+        .result-box.iper { background: linear-gradient(135deg, #faf5ff, #e9d8fd); border-color: var(--iper); }
+        .result-box h3 { margin: 0 0 8px; font-size: 1rem; }
+        .result-box .big-number { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .result-box p { font-size: 0.88rem; color: var(--text-light); margin-top: 4px; }
+
+        .btn {
+            padding: 12px 28px; border: none; border-radius: 8px; font-size: 0.95rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,54,93,0.3); }
+        .btn-secondary { background: #edf2f7; color: var(--text); }
+        .btn-secondary:hover { background: #e2e8f0; }
+        .btn-group { display: flex; gap: 12px; margin-top: 20px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.88rem; }
+        th { background: #7B3010; color: white; padding: 10px 12px; text-align: left; font-weight: 600; }
+        th.iper-th { background: var(--iper); }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        tr:hover td { background: #fdf3ea; }
+
+        .info-banner {
+            background: #fdf3ea; border-left: 4px solid #C4591A; padding: 12px 16px;
+            border-radius: 0 8px 8px 0; margin-bottom: 16px; font-size: 0.88rem;
+        }
+        .info-banner.iper-banner { background: #faf5ff; border-left-color: var(--iper); }
+        .info-banner strong { color: #7B3010; }
+        .info-banner.iper-banner strong { color: var(--iper); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+        .stat-card {
+            text-align: center; padding: 20px; border-radius: 12px;
+            background: linear-gradient(135deg, #5C2008, #7B3010, #C4591A);
+            color: white;
+        }
+        .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; }
+        .stat-card .stat-label { font-size: 0.8rem; opacity: 0.85; margin-top: 4px; }
+        .stat-card.iper { background: linear-gradient(135deg, var(--iper), var(--iper-light)); }
+
+        .separator { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+        .accordion { margin-bottom: 8px; }
+        .accordion-header {
+            background: #fdf3ea; padding: 12px 16px; border-radius: 8px; cursor: pointer;
+            font-weight: 600; font-size: 0.92rem; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid var(--border); transition: background 0.2s;
+        }
+        .accordion-header:hover { background: #fce0c0; }
+        .accordion-header .arrow { transition: transform 0.3s; }
+        .accordion-header.open .arrow { transform: rotate(90deg); }
+        .accordion-body { padding: 12px 16px; display: none; font-size: 0.88rem; line-height: 1.6; border: 1px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; }
+        .accordion-body.open { display: block; }
+
+        .asset-list { list-style: disc; padding-left: 24px; }
+        .asset-list li { margin-bottom: 6px; font-size: 0.88rem; line-height: 1.5; }
+        .asset-cat { font-weight: 700; color: var(--primary); margin: 12px 0 6px; font-size: 0.95rem; }
+
+        /* Asset Grid Styles */
+        .asset-grid-wrapper { overflow-x: auto; margin-top: 12px; }
+        .asset-grid-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .asset-grid-table th {
+            background: var(--primary); color: white; padding: 8px 10px;
+            text-align: left; font-weight: 600; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap;
+        }
+        .asset-grid-table th.iper-col { background: var(--iper); }
+        .asset-grid-table td { padding: 6px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .asset-grid-table input[type="text"],
+        .asset-grid-table input[type="number"],
+        .asset-grid-table select {
+            width: 100%; padding: 7px 8px; border: 1px solid var(--border); border-radius: 6px;
+            font-size: 0.85rem; background: white;
+        }
+        .asset-grid-table input:focus, .asset-grid-table select:focus {
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(26,54,93,0.1);
+        }
+        .asset-grid-table .col-num { width: 32px; text-align: center; color: var(--text-light); font-weight: 600; }
+        .asset-grid-table .col-desc { min-width: 170px; }
+        .asset-grid-table .col-importo { width: 130px; }
+        .asset-grid-table .col-tipo { width: 140px; }
+        .asset-grid-table .col-cat { width: 165px; }
+        .asset-grid-table .col-iper { width: 200px; }
+        .asset-grid-table .col-amm { width: 70px; }
+        .asset-grid-table .col-amm input { text-align: center; }
+        .asset-grid-table .col-del { width: 36px; text-align: center; }
+        .asset-grid-table th.tipo-col { background: #2b6cb0; }
+        .fab-warning-badge { display: inline-block; font-size: 0.7rem; background: var(--accent); color: white; padding: 1px 5px; border-radius: 3px; margin-left: 4px; }
+        .asset-grid-table .totals-row { background: #edf2f7; font-weight: 700; }
+        .asset-grid-table .totals-row td { border-top: 2px solid var(--primary); padding: 10px 6px; }
+        .btn-add-row {
+            margin-top: 10px; padding: 8px 18px; border: 2px dashed #C4591A; border-radius: 8px;
+            background: transparent; color: #C4591A; font-weight: 600; cursor: pointer;
+            font-size: 0.88rem; transition: all 0.2s;
+        }
+        .btn-add-row:hover { background: #C4591A; color: white; }
+        .btn-del-row {
+            background: none; border: none; color: var(--accent); font-size: 1.2rem;
+            cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: background 0.2s;
+        }
+        .btn-del-row:hover { background: #fed7d7; }
+        .linked-field { border-color: var(--iper) !important; background: #faf5ff !important; }
+        .toggle-group { display: flex; gap: 8px; margin-top: 4px; }
+        .toggle-btn { flex: 1; padding: 9px 12px; border: 2px solid var(--border); border-radius: 6px; background: white; color: var(--text); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.18s; text-align: center; }
+        .toggle-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .toggle-btn.active-si { border-color: #2E7D7D; background: #e6f4f1; color: #2E7D7D; }
+        .toggle-btn.active-no { border-color: #c53030; background: #fff5f5; color: #c53030; }
+        .toggle-btn.active-ok { border-color: #2E7D7D; background: #e6f4f1; color: #2E7D7D; }
+        .toggle-btn.active-ko { border-color: #c53030; background: #fff5f5; color: #c53030; }
+        .linked-label { display: inline-block; font-size: 0.72rem; background: var(--iper); color: white; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+        .agev-badge { display: inline-block; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; margin: 2px 3px 2px 0; font-weight: 600; white-space: nowrap; }
+        .agev-zes { background: #fdf3ea; color: #7B3010; border: 1px solid #F0A020; }
+        .agev-iper { background: #faf5ff; color: var(--iper); border: 1px solid #e9d8fd; }
+        .agev-no { background: #fff5f5; color: var(--accent); border: 1px solid #fed7d7; }
+        .agev-deminimis { background: #f0fff4; color: #276749; border: 1px solid #c6f6d5; }
+        .agev-sabatini { background: #fffaf0; color: #744210; border: 1px solid #f6ad55; }
+        .cumulo-beni-row td { vertical-align: middle; padding: 8px 6px; }
+        .cumulo-beni-row .agev-cell { max-width: 340px; }
+
+        @media (max-width: 768px) {
+            .form-grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .tabs { padding: 0 12px; }
+            .tab { padding: 12px 14px; font-size: 0.78rem; }
+            .container { padding: 16px; }
+            .asset-grid-table { font-size: 0.78rem; }
+            .asset-grid-table .col-desc { min-width: 150px; }
+        }
+        .btn-print {
+            padding: 8px 16px; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px;
+            background: rgba(255,255,255,0.15); color: white; font-size: 0.82rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .btn-print:hover { background: rgba(255,255,255,0.3); }
+
+        @media print {
+            body { background: white; font-size: 11pt; }
+            .header { padding: 12px 20px; box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .tabs, .btn-add-row, .btn-del-row, .btn-group, .btn-print, .no-print { display: none !important; }
+            .container { max-width: 100%; padding: 0 16px; }
+            .section { display: block !important; page-break-before: always; }
+            .section:first-child { page-break-before: auto; }
+            .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 12px; padding: 12px; }
+            .result-box { page-break-inside: avoid; }
+            .stat-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .agev-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .info-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            table { page-break-inside: avoid; }
+            .print-header { display: block !important; text-align: center; padding: 12px 0; border-bottom: 2px solid var(--primary); margin-bottom: 16px; }
+            .print-header h2 { font-size: 1.2rem; color: var(--primary); margin-bottom: 4px; }
+            .print-header p { font-size: 0.9rem; color: var(--text-light); }
+            input, select { border: none !important; background: transparent !important; box-shadow: none !important; padding: 0 !important; }
+            input[type="text"], input[type="number"] { -webkit-appearance: none; appearance: none; }
+            .accordion-content { display: block !important; max-height: none !important; }
+        }
+    </style>
+</head>
+<body>
+<div class="print-header" style="display:none;">
+    <img src="data:image/png;base64,[BASE64_REMOVED]" alt="Errendi S.r.l." style="height:48px;margin-bottom:8px;"><br><h2 id="printAzienda">Report Cruscotto ZES Unica 2026-2028</h2>
+    <p id="printData"></p>
+</div>
+
+<div class="header">
+    <div style="display:flex;align-items:center;gap:20px;">
+        <img src="data:image/png;base64,[BASE64_REMOVED]" alt="Errendi S.r.l." style="height:64px;width:auto;background:white;border-radius:10px;padding:6px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+        <div>
+            <h1>Cruscotto Operativo ZES Unica 2026-2028</h1>
+            <div class="subtitle">Art. 16 D.L. 124/2023 &mdash; Art. 1, commi 438-443 e 427-436, L. 199/2025 (Legge di Bilancio 2026)</div>
+        </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+        <span id="headerAziendaLabel" style="font-weight:600;font-size:0.95rem;opacity:0.9;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+        <div class="badge" style="background:var(--accent);color:#2d2d2d;">v2.4 &mdash; Marzo 2026</div>
+        <button class="btn-print" onclick="stampaReport()" title="Stampa report completo">&#128424; Stampa Report</button>
+    </div>
+</div>
+
+<div class="tabs">
+    <button class="tab active" onclick="showSection('anagrafica',this)">1. Anagrafica Impresa</button>
+    <button class="tab" onclick="showSection('calcolo',this)">2. Calcolo ZES</button>
+    <button class="tab" onclick="showSection('cumulo',this)">3. Cumulo ZES + Iperammortamento</button>
+    <button class="tab" onclick="showSection('beni',this)">4. Elenco Beni Agevolabili</button>
+    <button class="tab" onclick="showSection('scadenze',this)">5. Scadenze</button>
+    <button class="tab" onclick="showSection('riferimenti',this)">6. Riferimenti Normativi</button>
+</div>
+
+<div class="container">
+
+<!-- ==================== SEZIONE 0: ANAGRAFICA IMPRESA ==================== -->
+<div id="anagrafica" class="section active">
+    <div class="card">
+        <h2>&#127970; Dati Generali dell'Impresa</h2>
+        <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:16px;">Inserisci i dati anagrafici e le caratteristiche dell'impresa. Questi dati saranno utilizzati in tutte le schede successive.</p>
+        <div class="form-grid">
+            <div class="form-group full">
+                <label>Denominazione / Ragione Sociale</label>
+                <input type="text" id="nome_azienda" placeholder="Inserisci il nome dell'azienda..." style="font-size:1.05rem;font-weight:600;" oninput="document.getElementById('headerAziendaLabel').textContent=this.value">
+            </div>
+            <div class="form-group">
+                <label>Dimensione Impresa</label>
+                <select id="gen_dimensione">
+                    <option value="">-- Seleziona --</option>
+                    <option value="micro">Micro impresa</option>
+                    <option value="piccola">Piccola impresa</option>
+                    <option value="media">Media impresa</option>
+                    <option value="grande">Grande impresa</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Regione Struttura Produttiva</label>
+                <select id="gen_regione">
+                    <option value="">-- Seleziona --</option>
+                    <option value="campania">Campania</option>
+                    <option value="puglia">Puglia</option>
+                    <option value="puglia_jtf">Puglia (territori JTF - Taranto)</option>
+                    <option value="basilicata">Basilicata</option>
+                    <option value="calabria">Calabria</option>
+                    <option value="sicilia">Sicilia</option>
+                    <option value="sardegna">Sardegna</option>
+                    <option value="sardegna_jtf">Sardegna (territori JTF - Sulcis)</option>
+                    <option value="molise">Molise</option>
+                    <option value="abruzzo">Abruzzo (zone c)</option>
+                    <option value="marche">Marche (zone c)</option>
+                    <option value="umbria">Umbria (zone c)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Settore di Attivit&agrave;</label>
+                <select id="gen_settore">
+                    <option value="">-- Seleziona --</option>
+                    <option value="manifattura">Attivit&agrave; manifatturiere</option>
+                    <option value="costruzioni">Costruzioni</option>
+                    <option value="commercio">Commercio all'ingrosso e al dettaglio</option>
+                    <option value="ricettivo">Attivit&agrave; ricettive e di ristorazione</option>
+                    <option value="terziario">Attivit&agrave; terziarie e servizi</option>
+                    <option value="trasf_agricoli">Trasformazione prodotti agricoli</option>
+                    <option value="industria_smart">Industria intelligente e sostenibile</option>
+                    <option value="aerospazio">Aerospazio e difesa</option>
+                    <option value="salute">Salute, alimentazione e qualit&agrave; della vita</option>
+                    <option value="turismo_cultura">Industria della creativit&agrave; turistico-culturale</option>
+                    <option value="smart_communities">Agenda digitale / Smart communities</option>
+                    <option value="siderurgica">Industria siderurgica</option>
+                    <option value="carbonifera">Industria carbonifera e della lignite</option>
+                    <option value="trasporti">Trasporti (escluso magazzinaggio)</option>
+                    <option value="energia">Produzione/distribuzione energia</option>
+                    <option value="banda_larga">Banda larga</option>
+                    <option value="finanziario">Settore creditizio/finanziario/assicurativo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Anno Investimento</label>
+                <select id="gen_anno">
+                    <option value="">-- Seleziona --</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tipologia Progetto</label>
+                <select id="gen_tipologia_progetto">
+                    <option value="">-- Seleziona --</option>
+                    <option value="nuovo">Nuovo stabilimento</option>
+                    <option value="ampliamento">Ampliamento stabilimento</option>
+                    <option value="diversificazione">Diversificazione produttiva</option>
+                    <option value="cambiamento">Cambiamento processo produttivo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>L'impresa &egrave; in stato di difficolt&agrave;?</label>
+                <input type="hidden" id="gen_in_difficolta" value="">
+                <div class="toggle-group">
+                    <button type="button" class="toggle-btn" data-active="active-ok" onclick="setToggle('gen_in_difficolta','no',this)">No</button>
+                    <button type="button" class="toggle-btn" data-active="active-ko" onclick="setToggle('gen_in_difficolta','si',this)">S&igrave;</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>DURC regolare in corso di validit&agrave;?</label>
+                <input type="hidden" id="gen_durc" value="">
+                <div class="toggle-group">
+                    <button type="button" class="toggle-btn" data-active="active-ok" onclick="setToggle('gen_durc','si',this)">S&igrave;</button>
+                    <button type="button" class="toggle-btn" data-active="active-ko" onclick="setToggle('gen_durc','no',this)">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>&#9881; Parametri Fiscali</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Aliquota IRES/IRPEF applicabile (%)</label>
+                <input type="number" id="gen_aliquota" placeholder="24" min="0" max="50" value="24">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ==================== SEZIONE 2: CALCOLO ZES ==================== -->
+<div id="calcolo" class="section">
+    <div class="info-banner">
+        <strong>Limiti di spesa annuali ZES:</strong> 2.300 M&euro; (2026) | 1.000 M&euro; (2027) | 750 M&euro; (2028) &mdash; Max per progetto: 100 M&euro;. Min investimento: 200.000 &euro;.
+    </div>
+
+    <!-- Ammissibilità integrata -->
+    <div class="card">
+        <h2>&#128269; Verifica Ammissibilit&agrave;</h2>
+        <div id="anagraficaSummaryAmm" class="info-banner" style="margin-bottom:16px;"></div>
+        <input type="hidden" id="importo_investimento">
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="verificaAmmissibilita()">Verifica Ammissibilit&agrave;</button>
+        </div>
+        <div id="risultato_ammissibilita" style="margin-top:16px;"></div>
+    </div>
+
+    <div class="card">
+        <h2>&#128200; Calcolo del Credito d'Imposta ZES Unica</h2>
+        <div id="anagraficaSummaryCalc" class="info-banner" style="margin-bottom:16px;"></div>
+        <h3>Dettaglio Investimenti &mdash; Elenco Beni</h3>
+        <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:8px;">Inserisci ogni singolo bene proposto per l'investimento ZES. Per ciascun bene, seleziona la categoria del modello ZES e l'eventuale tipologia per l'iperammortamento.</p>
+        <div class="asset-grid-wrapper">
+            <table class="asset-grid-table" id="assetTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Descrizione Bene</th>
+                        <th>Importo (&euro;)</th>
+                        <th class="tipo-col">Tipologia Bene</th>
+                        <th>Categoria ZES</th>
+                        <th class="iper-col">Iperammortamento</th>
+                        <th class="iper-col">Amm.%</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="assetTableBody">
+                </tbody>
+                <tfoot>
+                    <tr class="totals-row">
+                        <td></td>
+                        <td>TOTALE INVESTIMENTO</td>
+                        <td id="assetTotalAmount" style="text-align:right;font-size:1rem;">&euro; 0,00</td>
+                        <td id="assetTotalByTipo" style="font-size:0.78rem;"></td>
+                        <td id="assetTotalByCategory" style="font-size:0.78rem;"></td>
+                        <td id="assetTotalIper" style="font-size:0.78rem;color:var(--iper);"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <button class="btn-add-row" onclick="addAssetRow()">+ Aggiungi Bene</button>
+        <div id="fabbricatiAlert" style="display:none;margin-top:12px;"></div>
+        <h3>Altri Aiuti gi&agrave; concessi o richiesti sugli stessi beni</h3>
+        <div class="form-grid">
+            <div class="form-group"><label>Aiuti di Stato / de minimis (&euro;)</label><input type="number" id="calc_altri_aiuti" placeholder="0" min="0" value="0"></div>
+            <div class="form-group"><label>Altre agevolazioni non aiuti di Stato (&euro;)</label><input type="number" id="calc_altre_agev" placeholder="0" min="0" value="0"></div>
+            <div class="form-group">
+                <label>Regolamento STEP applicabile?</label>
+                <select id="calc_step"><option value="no">No</option><option value="si">S&igrave; (+10pp zone a / +5pp zone c)</option></select>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="calcolaCredito()">Calcola Credito d'Imposta</button>
+            <button class="btn btn-secondary" onclick="resetForm('calcolo')">Reset</button>
+        </div>
+        <div id="risultato_calcolo" style="margin-top:20px;"></div>
+    </div>
+</div>
+
+<!-- ==================== SEZIONE 3: CUMULO ZES + IPERAMMORTAMENTO ==================== -->
+<div id="cumulo" class="section">
+    <div class="info-banner iper-banner">
+        <strong>Iperammortamento 2026 (commi 427-436 L. 199/2025):</strong> Maggiorazione del costo ai fini dell'ammortamento fiscale del 180% (fino a 2,5M&euro;), 100% (2,5-10M&euro;), 50% (10-20M&euro;) per beni strumentali nuovi in Allegato IV e V, prodotti in UE/SEE, interconnessi. Periodo: 1/1/2026 - 30/9/2028.
+    </div>
+    <div class="info-banner">
+        <strong>Cumulabilit&agrave; (comma 431):</strong> L'iperammortamento &egrave; cumulabile con ulteriori agevolazioni (inclusa ZES), a condizione che il sostegno non copra le medesime quote di costo e non porti al superamento del costo sostenuto. La base di calcolo dell'iperammortamento &egrave; assunta al netto delle altre sovvenzioni ricevute per i medesimi costi ammissibili. NON cumulabile con il credito 4.0 ex art. 1, c. 446, L. 207/2024.
+    </div>
+
+    <!-- Banner ZES collegato -->
+    <div id="cumuloZesBanner" class="result-box success" style="display:none;margin-bottom:16px;"></div>
+
+    <!-- Elenco beni auto-populated da Calcolo ZES -->
+    <div class="card">
+        <h2>&#128279; Beni dell'Investimento &mdash; Agevolazioni Cumulabili</h2>
+        <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:12px;">I beni sono importati automaticamente dalla scheda <em>Calcolo ZES</em>. Per ogni bene viene indicato il quadro delle agevolazioni cumulabili.</p>
+        <div id="cumuloBeniEmpty" class="result-box warning" style="display:none;"><h3>Nessun bene inserito</h3><p>Inserisci almeno un bene nella scheda <em>Calcolo ZES</em> per visualizzare il quadro delle agevolazioni cumulabili.</p></div>
+        <div class="asset-grid-wrapper">
+            <table class="asset-grid-table" id="cumuloBeniTable" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Descrizione Bene</th>
+                        <th style="text-align:right">Importo (&euro;)</th>
+                        <th>Tipologia</th>
+                        <th>Cat. ZES</th>
+                        <th style="text-align:center">Amm.%</th>
+                        <th>Agevolazioni Cumulabili</th>
+                    </tr>
+                </thead>
+                <tbody id="cumuloBeniTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Parametri fiscali impresa -->
+    <div class="card">
+        <div id="anagraficaSummaryCumulo" class="info-banner" style="margin-bottom:16px;"></div>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="calcolaCumulo()">Calcola Cumulo su tutti i Beni</button>
+        </div>
+        <div id="risultato_cumulo" style="margin-top:20px;"></div>
+    </div>
+
+    <div class="card">
+        <h2>&#128214; Riepilogo Regole di Cumulabilit&agrave;</h2>
+        <table>
+            <thead><tr><th>Agevolazione</th><th>Cumulabile con ZES?</th><th>Condizioni</th><th>Riferimento</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><strong>Iperammortamento 2026</strong> (commi 427-436 L. 199/2025)</td>
+                    <td><span class="check-ok">&#10004; S&igrave;</span></td>
+                    <td>Cumulo ammesso (c. 431). Il sostegno non deve coprire le medesime quote di costo né superare il costo sostenuto. Base di calcolo iper al netto delle altre sovvenzioni. Si applica in ogni caso il limite del 75% ex art. 14, par. 14, Reg. 651/2014.</td>
+                    <td>Art. 1, c. 431, L. 199/2025</td>
+                </tr>
+                <tr>
+                    <td><strong>Credito Industria 4.0</strong> (art. 1, c. 446, L. 207/2024)</td>
+                    <td><span class="check-ko">&#10008; No con Iper</span></td>
+                    <td>L'iperammortamento NON si applica ai beni che beneficiano del credito 4.0 (c. 431, ultimo periodo). Cumulabile con ZES separatamente.</td>
+                    <td>Art. 1, c. 431 ult. per., L. 199/2025</td>
+                </tr>
+                <tr>
+                    <td><strong>Aiuti de minimis</strong></td>
+                    <td><span class="check-ok">&#10004; S&igrave;</span></td>
+                    <td>Cumulo con ZES ammesso, nel rispetto dell'intensit&agrave; massima di aiuto</td>
+                    <td>Art. 16, c. 5, D.L. 124/2023</td>
+                </tr>
+                <tr>
+                    <td><strong>Altri aiuti di Stato</strong> (inclusa Nuova Sabatini)</td>
+                    <td><span class="check-warn">&#9888; Condizionato</span></td>
+                    <td>Ammesso se il cumulo non supera l'intensit&agrave; o l'importo pi&ugrave; elevato consentito + art. 14, par. 14, Reg. 651/2014. La Nuova Sabatini &egrave; un regime d'aiuto: il suo importo va computato nel calcolo del cumulo.</td>
+                    <td>Art. 16, c. 5, D.L. 124/2023</td>
+                </tr>
+                <tr>
+                    <td><strong>Misure non aiuti di Stato</strong></td>
+                    <td><span class="check-ok">&#10004; S&igrave;</span></td>
+                    <td>Cumulo ammesso nei limiti delle spese effettivamente sostenute e nel rispetto del limite del 75% ex art. 14, par. 14, Reg. 651/2014</td>
+                    <td>Dichiarazione sostitutiva lett. s)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>&#9881; Aliquote Iperammortamento (comma 427)</h2>
+        <table>
+            <thead><tr><th class="iper-th">Scaglione investimento</th><th class="iper-th">Maggiorazione</th><th class="iper-th">Ammortamento effettivo (su 100&euro;)</th><th class="iper-th">Risparmio fiscale IRES 24% (su 100&euro;)</th></tr></thead>
+            <tbody>
+                <tr><td>Fino a 2.500.000 &euro;</td><td><strong>180%</strong></td><td>100 + 180 = 280 &euro;</td><td>67,20 &euro;</td></tr>
+                <tr><td>Da 2.500.001 a 10.000.000 &euro;</td><td><strong>100%</strong></td><td>100 + 100 = 200 &euro;</td><td>48,00 &euro;</td></tr>
+                <tr><td>Da 10.000.001 a 20.000.000 &euro;</td><td><strong>50%</strong></td><td>100 + 50 = 150 &euro;</td><td>36,00 &euro;</td></tr>
+                <tr><td>Oltre 20.000.000 &euro;</td><td>Nessuna</td><td>100 &euro;</td><td>24,00 &euro;</td></tr>
+            </tbody>
+        </table>
+        <p style="font-size:0.82rem;color:var(--text-light);margin-top:8px;">Condizioni: beni in Allegato IV/V alla L. 199/2025, prodotti in UE/SEE, interconnessi. Periodo: 1/1/2026 - 30/9/2028. Accesso via piattaforma GSE.</p>
+    </div>
+</div>
+
+<!-- ==================== SEZIONE 4: ELENCO BENI ==================== -->
+<div id="beni" class="section">
+    <div class="info-banner iper-banner">
+        <strong>Allegato IV e V alla L. 199/2025:</strong> L'elenco dei beni agevolabili con l'iperammortamento corrisponde sostanzialmente a quello degli Allegati A e B alla L. 232/2016 (Piano Industria 4.0). I beni devono essere nuovi, strumentali, prodotti in UE/SEE e interconnessi al sistema aziendale di gestione della produzione o alla rete di fornitura.
+    </div>
+
+    <div class="card">
+        <h2>&#128230; Allegato IV &mdash; Beni Materiali Strumentali (4.0)</h2>
+
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>1. Beni strumentali con funzionamento controllato da sistemi computerizzati</span>
+                <span class="arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+                <p>Macchine il cui funzionamento &egrave; controllato da sistemi computerizzati o gestito tramite opportuni sensori e azionamenti:</p>
+                <ul class="asset-list">
+                    <li>Macchine utensili per asportazione</li>
+                    <li>Macchine utensili operanti con laser e altri processi a flusso di energia (plasma, waterjet, fascio di elettroni), elettroerosione, processi elettrochimici</li>
+                    <li>Macchine e impianti per la realizzazione di prodotti mediante la trasformazione dei materiali e delle materie prime</li>
+                    <li>Macchine utensili per la deformazione plastica dei metalli e altri materiali</li>
+                    <li>Macchine utensili per l'assemblaggio, la giunzione e la saldatura</li>
+                    <li>Macchine per il confezionamento e l'imballaggio</li>
+                    <li>Macchine utensili di de-produzione e riconfezionamento per recuperare materiali e funzioni da scarti industriali e prodotti di ritorno a fine vita (disassemblaggio, separazione, frantumazione, recupero chimico)</li>
+                    <li>Robot, robot collaborativi e sistemi multi-robot</li>
+                    <li>Macchine utensili e sistemi per il conferimento o la modifica delle caratteristiche superficiali dei prodotti o la funzionalizzazione delle superfici</li>
+                    <li>Macchine per la manifattura additiva utilizzate in ambito industriale (stampa 3D industriale)</li>
+                    <li>Macchine, anche motrici e operatrici, strumenti e dispositivi per il carico/scarico, movimentazione, pesatura e cernita automatica, sollevamento e manipolazione automatizzati, AGV e sistemi di convogliamento flessibili e/o dotati di riconoscimento pezzi (RFID, visori, sistemi di visione)</li>
+                    <li>Magazzini automatizzati interconnessi ai sistemi gestionali di fabbrica</li>
+                </ul>
+
+                <p class="asset-cat">Caratteristiche obbligatorie (tutte):</p>
+                <ul class="asset-list">
+                    <li>Controllo tramite CNC (Computer Numerical Control) e/o PLC (Programmable Logic Controller)</li>
+                    <li>Interconnessione ai sistemi informatici di fabbrica con caricamento da remoto di istruzioni e/o part program</li>
+                    <li>Integrazione automatizzata con il sistema logistico della fabbrica o con la rete di fornitura e/o con altre macchine del ciclo produttivo</li>
+                    <li>Interfaccia uomo-macchina semplice e intuitiva</li>
+                    <li>Rispondenza ai pi&ugrave; recenti parametri di sicurezza, salute e igiene del lavoro</li>
+                </ul>
+
+                <p class="asset-cat">Pi&ugrave; almeno 2 delle seguenti (integrazione cyberfisica):</p>
+                <ul class="asset-list">
+                    <li>Sistemi di telemanutenzione e/o telediagnosi e/o controllo in remoto</li>
+                    <li>Monitoraggio continuo delle condizioni di lavoro e dei parametri di processo mediante set di sensori e adattivit&agrave; alle derive di processo</li>
+                    <li>Caratteristiche di integrazione tra macchina fisica e/o impianto con la modellizzazione e/o simulazione del proprio comportamento nello svolgimento del processo (sistema cyberfisico)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>2. Sistemi per l'assicurazione della qualit&agrave; e della sostenibilit&agrave;</span>
+                <span class="arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+                <ul class="asset-list">
+                    <li>Sistemi di misura a coordinate e non (a contatto, non a contatto, multi-sensore o basati su tomografia computerizzata 3D) per la verifica dei requisiti geometrici di prodotto a qualunque scala dimensionale, connessi al sistema informativo di fabbrica</li>
+                    <li>Altri sistemi di monitoraggio in-process per assicurare e tracciare la qualit&agrave; del prodotto o del processo produttivo, connessi al sistema informativo di fabbrica</li>
+                    <li>Sistemi per l'ispezione e la caratterizzazione dei materiali (macchine di prova materiali, collaudo, prove non distruttive, tomografia) in grado di generare report nel sistema informativo aziendale</li>
+                    <li>Dispositivi intelligenti per il test delle polveri metalliche e sistemi di monitoraggio in continuo per produzione additiva</li>
+                    <li>Sistemi intelligenti e connessi di marcatura e tracciabilit&agrave; dei lotti produttivi e/o dei singoli prodotti (es. RFID)</li>
+                    <li>Sistemi di monitoraggio e controllo delle condizioni di lavoro delle macchine e dei sistemi di produzione interfacciati con i sistemi informativi di fabbrica e/o con soluzioni cloud</li>
+                    <li>Strumenti e dispositivi per l'etichettatura, l'identificazione o la marcatura automatica dei prodotti</li>
+                    <li>Componenti, sistemi e soluzioni intelligenti per la gestione, l'utilizzo efficiente e il monitoraggio dei consumi energetici e idrici e per la riduzione delle emissioni</li>
+                    <li>Filtri e sistemi di trattamento e recupero di acqua, aria, olio, sostanze chimiche, polveri con sistemi di segnalazione, integrati con il sistema di fabbrica</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>3. Dispositivi per l'interazione uomo-macchina e sicurezza 4.0</span>
+                <span class="arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+                <ul class="asset-list">
+                    <li>Banchi e postazioni di lavoro ergonomiche con adattamento automatizzato alle caratteristiche fisiche degli operatori (biometria, et&agrave;, disabilit&agrave;)</li>
+                    <li>Sistemi per il sollevamento/traslazione di parti pesanti o oggetti ad alte temperature con assistenza intelligente/robotizzata/interattiva</li>
+                    <li>Dispositivi wearable, apparecchiature di comunicazione operatore-sistema produttivo</li>
+                    <li>Dispositivi di realt&agrave; aumentata e virtual reality</li>
+                    <li>Interfacce uomo-macchina (HMI) intelligenti per sicurezza ed efficienza delle operazioni</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>&#128187; Allegato V &mdash; Beni Immateriali (Software, Sistemi e Piattaforme 4.0)</h2>
+
+        <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>Software, sistemi e piattaforme connessi a investimenti in beni materiali 4.0</span>
+                <span class="arrow">&#9654;</span>
+            </div>
+            <div class="accordion-body">
+                <ul class="asset-list">
+                    <li>Software per progettazione, modellazione 3D, simulazione, prototipazione e verifica simultanea (sistemi EDM, PDM, PLM, Big Data Analytics)</li>
+                    <li>Software per progettazione e ri-progettazione dei sistemi produttivi (flussi materiali e informazioni)</li>
+                    <li>Software di supporto alle decisioni per migliorare qualit&agrave; del prodotto ed efficienza di produzione</li>
+                    <li>Software per gestione e coordinamento della produzione con integrazione logistica e manutenzione (sistemi SCADA, MES, CMMS, IoT, cloud computing)</li>
+                    <li>Software per monitoraggio e controllo delle condizioni di lavoro delle macchine, interfacciati con il sistema di fabbrica e/o cloud</li>
+                    <li>Software di realt&agrave; virtuale per studio di componenti e operazioni (assemblaggio, contesti immersivi)</li>
+                    <li>Software di reverse modeling and engineering</li>
+                    <li>Software IoT per comunicazione e condivisione dati tra macchine e ambiente (Industrial Internet of Things)</li>
+                    <li>Software per dispatching delle attivit&agrave; e instradamento prodotti</li>
+                    <li>Software per gestione della qualit&agrave; a livello di sistema produttivo</li>
+                    <li>Software cloud computing per risorse virtualizzate a supporto di produzione e supply chain</li>
+                    <li>Software industrial analytics e big data (Data Analytics &amp; Visualization, Simulation, Forecasting)</li>
+                    <li>Software AI e machine learning per qualit&agrave; di processo e affidabilit&agrave; impianti</li>
+                    <li>Software per produzione automatizzata intelligente (cybersystem)</li>
+                    <li>Software per utilizzo di robot collaborativi e macchine intelligenti</li>
+                    <li>Software di realt&agrave; aumentata tramite wearable device</li>
+                    <li>Software per acquisizione ed elaborazione informazioni in formato vocale, visuale e tattile</li>
+                    <li>Software per efficienza energetica e decentralizzazione (Energy Dashboarding)</li>
+                    <li>Software cybersecurity per protezione reti, dati, macchine e impianti</li>
+                    <li>Software di virtual industrialization per simulazione e test</li>
+                    <li>Sistemi di gestione supply chain per drop shipping ed e-commerce</li>
+                    <li>Software per fruizione immersiva, ricostruzioni 3D, realt&agrave; aumentata</li>
+                    <li>Software per coordinamento logistica con integrazione dispositivi on-field e mobile</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>&#9889; Beni per Autoproduzione Energia Rinnovabile (comma 429, lett. b)</h2>
+        <p style="font-size:0.88rem;margin-bottom:12px;">Agevolabili anche i beni materiali nuovi finalizzati all'autoproduzione di energia da fonti rinnovabili destinata all'autoconsumo, inclusi impianti di stoccaggio. Per il fotovoltaico: solo moduli di cui all'art. 12, c. 1, lett. b) e c), D.L. 181/2023 (moduli UE con celle a eterogiunzione o tandem ad alta efficienza).</p>
+    </div>
+
+    <div class="card">
+        <h2>&#128466; Corrispondenza con il Modello ZES (Sezione III Quadro B)</h2>
+        <table>
+            <thead><tr><th>Rigo</th><th>Categoria</th><th>Descrizione nel modello ZES</th></tr></thead>
+            <tbody>
+                <tr><td><strong>B30</strong></td><td>Sistemi produttivi digitali</td><td>Sistemi produttivi gestiti tramite dispositivi digitali in grado di realizzare una o pi&ugrave; fasi del ciclo produttivo</td></tr>
+                <tr><td><strong>B31</strong></td><td>Automazione produzione</td><td>Sistemi di automazione con utilizzo di robot, sensori e componenti per flessibilit&agrave; ed efficienza</td></tr>
+                <tr><td><strong>B32</strong></td><td>Hardware/Software avanzato</td><td>HW e SW anche cloud per: big data, interfacce multimediali, sensoristica avanzata, ottimizzazione energetica e privacy, assistenza remota</td></tr>
+                <tr><td><strong>B33</strong></td><td>Prototipazione avanzata</td><td>Strumenti di prototipazione elettronica e/o produzione avanzata (stampa 3D, taglio laser, fresatura CNC)</td></tr>
+                <tr><td><strong>B34</strong></td><td>R&amp;S e servizi avanzati</td><td>Beni e apparecchiature per fornitura di servizi avanzati o attivit&agrave; di ricerca e sviluppo</td></tr>
+                <tr><td><strong>B35</strong></td><td>Beni ordinari e immobili</td><td>Impianti, macchinari e attrezzature non ricadenti nei righi B30-B34, e beni immobili. <br><strong style="color:var(--accent);">Fabbricati e terreni: agevolabili nel limite del 50% dell'investimento complessivo</strong> (art. 16, c. 4, D.L. 124/2023)</td></tr>
+            </tbody>
+        </table>
+        <p style="font-size:0.82rem;color:var(--text-light);margin-top:8px;">Nota: Solo i beni dei righi B30-B34 possono rientrare nell'Allegato IV/V per l'iperammortamento. I beni del rigo B35 sono beni ordinari non agevolabili con l'iper. Nella griglia Calcolo ZES, la <em>Tipologia Bene</em> (Impianti/Macchinari/Attrezzature/Fabbricati) e la <em>Categoria ZES</em> (B30-B35) sono due classificazioni coesistenti e indipendenti. I <strong>fabbricati e terreni</strong> sono agevolabili nel limite massimo del 50% dell'investimento complessivo (art. 16, c. 4, D.L. 124/2023).</p>
+    </div>
+</div>
+
+<!-- ==================== SEZIONE 5: SCADENZE ==================== -->
+<div id="scadenze" class="section">
+    <div class="card">
+        <h2>&#128197; Calendario Scadenze e Adempimenti</h2>
+        <table>
+            <thead><tr><th>Adempimento</th><th>Anno 2026</th><th>Anno 2027</th><th>Anno 2028</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Comunicazione preventiva ZES</strong></td><td>31/03 - 30/05/2026</td><td>31/03 - 30/05/2027</td><td>31/03 - 30/05/2028</td></tr>
+                <tr><td><strong>Comunicazione integrativa ZES</strong> (a pena di decadenza)</td><td>03/01 - 17/01/2027</td><td>03/01 - 17/01/2028</td><td>03/01 - 17/01/2029</td></tr>
+                <tr><td><strong>Periodo investimenti ZES</strong></td><td>01/01 - 31/12/2026</td><td>01/01 - 31/12/2027</td><td>01/01 - 31/12/2028</td></tr>
+                <tr><td><strong>Periodo investimenti Iperammortamento</strong></td><td colspan="3">01/01/2026 - 30/09/2028</td></tr>
+                <tr><td><strong>Certificazione revisore ZES</strong></td><td colspan="3">Entro 30 gg dalla pubblicazione provvedimento ex c. 441</td></tr>
+                <tr><td><strong>Comunicazione/Certificazione GSE Iper</strong></td><td colspan="3">Tramite piattaforma GSE (modalit&agrave; da DM attuativo ex c. 433)</td></tr>
+                <tr><td><strong>Limite di spesa ZES</strong></td><td>2.300 M&euro;</td><td>1.000 M&euro;</td><td>750 M&euro;</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card">
+        <h2>&#128203; Checklist Documentale</h2>
+        <ul class="checklist">
+            <li><span class="icon">&#128196;</span> <strong>ZES:</strong> Comunicazione telematica via software Agenzia Entrate</li>
+            <li><span class="icon">&#128196;</span> <strong>ZES:</strong> Dichiarazione sostitutiva atto di notoriet&agrave; (art. 47 DPR 445/2000)</li>
+            <li><span class="icon">&#128196;</span> <strong>ZES:</strong> Certificazione del revisore dei conti (D.M. 17/5/2024)</li>
+            <li><span class="icon">&#128196;</span> <strong>ZES:</strong> Fatture elettroniche ricevute tramite SDI</li>
+            <li><span class="icon">&#128196;</span> <strong>ZES:</strong> DURC regolare e iscrizione Registro Imprese</li>
+            <li><span class="icon">&#128196;</span> <strong>ZES:</strong> Codice ATECO 2025 corrispondente in Anagrafe Tributaria</li>
+            <li><span class="icon">&#128196;</span> <strong>ZES:</strong> Documentazione antimafia (per crediti > 150.000 &euro;)</li>
+            <li><span class="icon">&#128196;</span> <strong>Iper:</strong> Comunicazione e certificazioni tramite piattaforma GSE (c. 430)</li>
+            <li><span class="icon">&#128196;</span> <strong>Iper:</strong> Attestazione di interconnessione del bene al sistema aziendale</li>
+            <li><span class="icon">&#128196;</span> <strong>Iper:</strong> Dichiarazione di conformit&agrave; del produttore (produzione UE/SEE)</li>
+            <li><span class="icon">&#128196;</span> <strong>Cumulo:</strong> Documentazione comprovante il rispetto del non superamento del costo sostenuto</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ==================== SEZIONE 6: RIFERIMENTI ==================== -->
+<div id="riferimenti" class="section">
+    <div class="card">
+        <h2>&#9878; Quadro Normativo di Riferimento</h2>
+        <table>
+            <thead><tr><th>Norma</th><th>Contenuto</th></tr></thead>
+            <tbody>
+                <tr><td><strong>D.L. 124/2023, art. 16</strong></td><td>Istituzione credito d'imposta ZES unica (come mod. dalla L. 199/2025)</td></tr>
+                <tr><td><strong>L. 199/2025, art. 1, cc. 438-443</strong></td><td>Estensione ZES al triennio 2026-2028, Marche e Umbria, limiti di spesa</td></tr>
+                <tr><td><strong>L. 199/2025, art. 1, cc. 427-436</strong></td><td>Iperammortamento 2026: maggiorazione costo ammortamento beni 4.0</td></tr>
+                <tr><td><strong>L. 199/2025, art. 1, c. 431</strong></td><td>Regole di cumulabilit&agrave; iperammortamento con altre agevolazioni (incl. ZES)</td></tr>
+                <tr><td><strong>L. 199/2025, Allegati IV e V</strong></td><td>Elenco beni materiali e immateriali agevolabili con iperammortamento</td></tr>
+                <tr><td><strong>L. 171/2025, art. 1</strong></td><td>Inclusione regioni Marche e Umbria nella ZES unica</td></tr>
+                <tr><td><strong>D.M. 17 maggio 2024</strong></td><td>Modalit&agrave; di accesso e fruizione del credito ZES</td></tr>
+                <tr><td><strong>Provv. AdE n. 3882/2026</strong></td><td>Modelli comunicazione ZES 2026-2028</td></tr>
+                <tr><td><strong>Reg. (UE) 651/2014, art. 14</strong></td><td>Aiuti a finalit&agrave; regionale - limiti di intensit&agrave;</td></tr>
+                <tr><td><strong>Carta aiuti finalit&agrave; regionale 2022-2027</strong></td><td>Intensit&agrave; massime per regione e dimensione</td></tr>
+                <tr><td><strong>L. 232/2016, Allegati A e B</strong></td><td>Elenco beni Industria 4.0 (base per Allegati IV e V)</td></tr>
+                <tr><td><strong>L. 207/2024, art. 1, c. 446</strong></td><td>Credito Industria 4.0 anno 2025 (non cumulabile con iper 2026)</td></tr>
+                <tr><td><strong>Reg. (UE) 795/2024 (STEP)</strong></td><td>Incremento intensit&agrave; aiuto per tecnologie strategiche</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card">
+        <h2>&#128161; Intensit&agrave; Massime di Aiuto ZES (Carta Regionale 2022-2027)</h2>
+        <table>
+            <thead><tr><th>Regione</th><th>Piccola (&le;50M&euro;)</th><th>Media (&le;50M&euro;)</th><th>Grande (&le;50M&euro;)</th><th>Zona</th></tr></thead>
+            <tbody>
+                <tr><td>Campania</td><td>60%</td><td>50%</td><td>40%</td><td>a)</td></tr>
+                <tr><td>Puglia</td><td>60%</td><td>50%</td><td>40%</td><td>a)</td></tr>
+                <tr><td>Puglia (JTF)</td><td>70%</td><td>60%</td><td>50%</td><td>a)+JTF</td></tr>
+                <tr><td>Basilicata</td><td>50%</td><td>40%</td><td>30%</td><td>a)</td></tr>
+                <tr><td>Calabria</td><td>60%</td><td>50%</td><td>40%</td><td>a)</td></tr>
+                <tr><td>Sicilia</td><td>60%</td><td>50%</td><td>40%</td><td>a)</td></tr>
+                <tr><td>Sardegna</td><td>50%</td><td>40%</td><td>30%</td><td>a)</td></tr>
+                <tr><td>Sardegna (JTF)</td><td>60%</td><td>50%</td><td>40%</td><td>a)+JTF</td></tr>
+                <tr><td>Molise</td><td>50%</td><td>40%</td><td>30%</td><td>a)</td></tr>
+                <tr><td>Abruzzo (c)</td><td>35%</td><td>25%</td><td>15%</td><td>c)</td></tr>
+                <tr><td>Marche (c)</td><td>35%</td><td>25%</td><td>15%</td><td>c)</td></tr>
+                <tr><td>Umbria (c)</td><td>35%</td><td>25%</td><td>15%</td><td>c)</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ============ DATI ============
+const intensita = {
+    campania:     { piccola: 60, media: 50, grande: 40 },
+    puglia:       { piccola: 60, media: 50, grande: 40 },
+    puglia_jtf:   { piccola: 70, media: 60, grande: 50 },
+    basilicata:   { piccola: 50, media: 40, grande: 30 },
+    calabria:     { piccola: 60, media: 50, grande: 40 },
+    sicilia:      { piccola: 60, media: 50, grande: 40 },
+    sardegna:     { piccola: 50, media: 40, grande: 30 },
+    sardegna_jtf: { piccola: 60, media: 50, grande: 40 },
+    molise:       { piccola: 50, media: 40, grande: 30 },
+    abruzzo:      { piccola: 35, media: 25, grande: 15 },
+    marche:       { piccola: 35, media: 25, grande: 15 },
+    umbria:       { piccola: 35, media: 25, grande: 15 }
+};
+const zoneA = ['campania','puglia','puglia_jtf','basilicata','calabria','sicilia','sardegna','sardegna_jtf','molise'];
+const zoneC = ['abruzzo','marche','umbria'];
+const settoriEsclusi = ['siderurgica','carbonifera','trasporti','energia','banda_larga','finanziario'];
+const nomiRegioni = {
+    campania:'Campania', puglia:'Puglia', puglia_jtf:'Puglia (JTF)',
+    basilicata:'Basilicata', calabria:'Calabria', sicilia:'Sicilia',
+    sardegna:'Sardegna', sardegna_jtf:'Sardegna (JTF)', molise:'Molise',
+    abruzzo:'Abruzzo', marche:'Marche', umbria:'Umbria'
+};
+
+// Tipologia fisica del bene
+const tipologieBene = {
+    impianti: 'Impianti',
+    macchinari: 'Macchinari',
+    attrezzature: 'Attrezzature varie',
+    fabbricati: 'Fabbricati / Terreni'
+};
+
+// Categorie ZES (Quadro B - Sezione III del modello)
+const categorieZES = {
+    B30: 'B30 - Sistemi produttivi digitali',
+    B31: 'B31 - Automazione / Robot',
+    B32: 'B32 - HW/SW avanzato',
+    B33: 'B33 - Prototipazione avanzata',
+    B34: 'B34 - R&S e servizi avanzati',
+    B35: 'B35 - Beni ordinari'
+};
+
+// Tipologie che sono fabbricati/immobili (soggetti al limite 50%)
+const tipologieFabbricati = ['fabbricati'];
+// Tipologie Iperammortamento (Allegato IV e V)
+const tipologieIper = {
+    '': '-- Non eleggibile --',
+    'all_iv_1': 'All.IV - 1. Macchine CNC/PLC controllate',
+    'all_iv_2': 'All.IV - 2. Qualit\u00e0 e sostenibilit\u00e0',
+    'all_iv_3': 'All.IV - 3. Interazione uomo-macchina',
+    'all_v': 'All.V - Software/Sistemi 4.0',
+    'rinnovabile': 'Autoproduzione energia rinnovabile (c.429b)'
+};
+
+let assetRowCounter = 0;
+
+// ============ ANAGRAFICA HELPERS ============
+function setToggle(inputId, value, btn) {
+    document.getElementById(inputId).value = value;
+    const group = btn.closest('.toggle-group');
+    group.querySelectorAll('.toggle-btn').forEach(b => b.className = 'toggle-btn');
+    btn.classList.add(btn.dataset.active || (value === 'si' ? 'active-si' : 'active-no'));
+}
+
+function getAnagraficaData() {
+    return {
+        nome: document.getElementById('nome_azienda').value,
+        dimensione: document.getElementById('gen_dimensione').value,
+        regione: document.getElementById('gen_regione').value,
+        settore: document.getElementById('gen_settore').value,
+        anno: document.getElementById('gen_anno').value,
+        tipologia: document.getElementById('gen_tipologia_progetto').value,
+        inDifficolta: document.getElementById('gen_in_difficolta').value,
+        durc: document.getElementById('gen_durc').value,
+        aliquota: parseFloat(document.getElementById('gen_aliquota').value) || 24,
+    };
+}
+
+function updateAnagraficaBanners() {
+    const a = getAnagraficaData();
+    const dimLabel = {micro:'Micro',piccola:'Piccola',media:'Media',grande:'Grande'}[a.dimensione] || '<em>non selezionata</em>';
+    const regLabel = nomiRegioni[a.regione] || '<em>non selezionata</em>';
+    const settLabel = a.settore ? document.querySelector('#gen_settore option[value="' + a.settore + '"]').textContent : '<em>non selezionato</em>';
+    const nomeLabel = a.nome || '<em>non specificata</em>';
+
+    const summary = '<strong>' + nomeLabel + '</strong> | ' + dimLabel + ' impresa | ' + regLabel + ' | ' + settLabel + ' | Anno: ' + (a.anno || '-');
+
+    const ammBanner = document.getElementById('anagraficaSummaryAmm');
+    if (ammBanner) ammBanner.innerHTML = '<strong>Dati dall\'Anagrafica:</strong> ' + summary;
+
+    const calcBanner = document.getElementById('anagraficaSummaryCalc');
+    if (calcBanner) calcBanner.innerHTML = '<strong>Dati dall\'Anagrafica:</strong> ' + summary;
+
+    const cumuloBanner = document.getElementById('anagraficaSummaryCumulo');
+    if (cumuloBanner) cumuloBanner.innerHTML = '<strong>Dati dall\'Anagrafica:</strong> ' + summary + ' | IRES ' + a.aliquota + '%';
+}
+
+// ============ UI ============
+function showSection(id, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    el.classList.add('active');
+    updateAnagraficaBanners();
+    if (id === 'cumulo') syncCumuloBeni();
+}
+function toggleAccordion(header) {
+    header.classList.toggle('open');
+    header.nextElementSibling.classList.toggle('open');
+}
+function fmt(n) { return new Intl.NumberFormat('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(n); }
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+function fmtInt(n) { return new Intl.NumberFormat('it-IT', {maximumFractionDigits: 0}).format(n); }
+
+// ============ ASSET GRID ============
+function addAssetRow() {
+    assetRowCounter++;
+    const tbody = document.getElementById('assetTableBody');
+    const tr = document.createElement('tr');
+    tr.id = 'assetRow_' + assetRowCounter;
+
+    // Build tipologia bene options
+    let tipoOpts = '<option value="">-- Seleziona --</option>';
+    for (const [k, v] of Object.entries(tipologieBene)) { tipoOpts += '<option value="' + k + '">' + v + '</option>'; }
+
+    // Build category ZES options
+    let catOpts = '<option value="">-- Seleziona --</option>';
+    catOpts += '<optgroup label="Beni 4.0 (Righi B30-B34)">';
+    ['B30','B31','B32','B33','B34'].forEach(k => { catOpts += '<option value="' + k + '">' + categorieZES[k] + '</option>'; });
+    catOpts += '</optgroup><optgroup label="Beni ordinari (Rigo B35)">';
+    catOpts += '<option value="B35">' + categorieZES['B35'] + '</option>';
+    catOpts += '</optgroup>';
+
+    // Build iper options
+    let iperOpts = '';
+    for (const [k, v] of Object.entries(tipologieIper)) { iperOpts += '<option value="' + k + '">' + v + '</option>'; }
+
+    tr.innerHTML = '<td class="col-num">' + assetRowCounter + '</td>'
+        + '<td class="col-desc"><input type="text" placeholder="Descrizione bene..." onchange="updateAssetTotals()"></td>'
+        + '<td class="col-importo"><input type="number" placeholder="0" min="0" value="" onchange="updateAssetTotals()" oninput="updateAssetTotals()"></td>'
+        + '<td class="col-tipo"><select onchange="onTipologiaChange(this)">' + tipoOpts + '</select></td>'
+        + '<td class="col-cat"><select onchange="onCategoryChange(this)">' + catOpts + '</select></td>'
+        + '<td class="col-iper"><select onchange="onIperChange(this)">' + iperOpts + '</select></td>'
+        + '<td class="col-amm"><input type="number" placeholder="-" min="1" max="100" step="0.5" disabled title="Seleziona prima una tipologia iperammortamento" style="background:#f0f0f0;" onchange="updateAssetTotals()"></td>'
+        + '<td class="col-del"><button class="btn-del-row" onclick="removeAssetRow(' + assetRowCounter + ')" title="Elimina riga">\u00d7</button></td>';
+
+    tbody.appendChild(tr);
+    updateAssetTotals();
+}
+
+function removeAssetRow(id) {
+    const row = document.getElementById('assetRow_' + id);
+    if (row) { row.remove(); renumberAssetRows(); updateAssetTotals(); }
+}
+
+function renumberAssetRows() {
+    const rows = document.querySelectorAll('#assetTableBody tr');
+    rows.forEach((r, i) => { r.querySelector('.col-num').textContent = i + 1; });
+}
+
+function onTipologiaChange(sel) {
+    const row = sel.closest('tr');
+    const tipo = sel.value;
+    const catSel = row.querySelector('.col-cat select');
+    const iperSel = row.querySelector('.col-iper select');
+
+    if (tipo === 'fabbricati') {
+        // Fabbricati/Terreni -> forza B35, blocca categoria e iper
+        sel.style.borderColor = 'var(--accent)';
+        sel.style.background = '#fff5f5';
+        catSel.value = 'B35';
+        catSel.disabled = true;
+        catSel.title = 'I fabbricati/terreni rientrano esclusivamente nella categoria B35';
+        iperSel.value = '';
+        iperSel.disabled = true;
+        iperSel.title = 'I fabbricati/terreni (B35) non sono eleggibili per l\'iperammortamento';
+    } else {
+        sel.style.borderColor = '';
+        sel.style.background = '';
+        catSel.disabled = false;
+        catSel.title = '';
+        // Riabilita iper (bloccato solo per fabbricati)
+        iperSel.disabled = false;
+        iperSel.title = '';
+    }
+    showFabbricatiAlert();
+    updateAssetTotals();
+}
+
+function onCategoryChange(sel) {
+    const row = sel.closest('tr');
+    const tipoSel = row.querySelector('.col-tipo select');
+    // Iper resta bloccato solo se tipologia = fabbricati (gestito da onTipologiaChange)
+    // Il cambio di categoria ZES non blocca mai l'iper di per se'
+    updateAssetTotals();
+}
+
+function showFabbricatiAlert() {
+    const assets = getAssetData();
+    const alertEl = document.getElementById('fabbricatiAlert');
+    const hasFabbricati = assets.some(a => tipologieFabbricati.includes(a.tipo) && a.importo > 0);
+    const totFab = assets.filter(a => tipologieFabbricati.includes(a.tipo)).reduce((s, a) => s + a.importo, 0);
+    const totAll = assets.reduce((s, a) => s + a.importo, 0);
+    const totAltri = totAll - totFab;  // beni non-fabbricati (la quota che fabbricati non possono superare)
+
+    if (hasFabbricati && alertEl) {
+        const pctFab = totAll > 0 ? (totFab / totAll * 100).toFixed(1) : 0;
+        const eccede = totFab > totAltri;
+        const eccedenza = totFab - totAltri;
+        alertEl.style.display = 'block';
+        alertEl.className = 'result-box ' + (eccede ? 'error' : 'warning');
+        alertEl.innerHTML = '<h3>' + (eccede ? '\u26a0 Limite fabbricati superato!' : '\u26a0 Fabbricati/Terreni presenti: attenzione al limite 50%') + '</h3>'
+            + '<p><strong>Fabbricati/Terreni inseriti:</strong> \u20ac ' + fmt(totFab) + ' (' + pctFab + '% del totale investimento \u20ac ' + fmt(totAll) + ')</p>'
+            + '<p style="font-size:0.82rem;">' + (eccede
+                ? 'I fabbricati/terreni <strong>eccedono la quota degli altri beni agevolabili</strong> (\u20ac ' + fmt(totAltri) + '). L\'eccedenza (\u20ac ' + fmt(eccedenza) + ') non sar\u00e0 agevolabile ai fini ZES (art. 16, c. 4, D.L. 124/2023). I fabbricati agevolabili sono ridotti a \u20ac ' + fmt(totAltri) + '.'
+                : 'I fabbricati e terreni sono agevolabili purch\u00e9 non eccedano la quota degli altri beni (art. 16, c. 4, D.L. 124/2023 \u2014 limite: 50% dell\'investimento agevolato). Attualmente entro il limite.') + '</p>';
+    } else if (alertEl) {
+        alertEl.style.display = 'none';
+    }
+}
+
+function onIperChange(sel) {
+    const row = sel.closest('tr');
+    const ammInput = row.querySelector('.col-amm input');
+    if (sel.value) {
+        // Iper selezionato: abilita coefficiente ammortamento
+        ammInput.disabled = false;
+        ammInput.style.background = '';
+        ammInput.title = 'Coefficiente di ammortamento ordinario (%) per questo bene';
+        if (!ammInput.value) ammInput.value = '20';
+    } else {
+        // Iper non selezionato: disabilita e svuota
+        ammInput.disabled = true;
+        ammInput.style.background = '#f0f0f0';
+        ammInput.value = '';
+        ammInput.title = 'Seleziona prima una tipologia iperammortamento';
+    }
+    updateAssetTotals();
+}
+
+function getAssetData() {
+    const rows = document.querySelectorAll('#assetTableBody tr');
+    const assets = [];
+    rows.forEach(r => {
+        const desc = r.querySelector('.col-desc input').value;
+        const importo = parseFloat(r.querySelector('.col-importo input').value) || 0;
+        const tipo = r.querySelector('.col-tipo select').value;
+        const cat = r.querySelector('.col-cat select').value;
+        const iper = r.querySelector('.col-iper select').value;
+        const coeffAmm = parseFloat(r.querySelector('.col-amm input').value) || 0;
+        assets.push({ desc, importo, tipo, cat, iper, coeffAmm });
+    });
+    return assets;
+}
+
+function updateAssetTotals() {
+    const assets = getAssetData();
+    let totale = 0;
+    let totByTipo = {};
+    let totByCat = {};
+    let totIper = 0;
+    let countIper = 0;
+
+    assets.forEach(a => {
+        totale += a.importo;
+        if (a.tipo) {
+            if (!totByTipo[a.tipo]) totByTipo[a.tipo] = 0;
+            totByTipo[a.tipo] += a.importo;
+        }
+        if (a.cat) {
+            if (!totByCat[a.cat]) totByCat[a.cat] = 0;
+            totByCat[a.cat] += a.importo;
+        }
+        if (a.iper) { totIper += a.importo; countIper++; }
+    });
+
+    // Total amount
+    document.getElementById('assetTotalAmount').innerHTML = '&euro; ' + fmt(totale);
+
+    // By tipologia summary
+    let tipoSummary = '';
+    for (const [k, v] of Object.entries(totByTipo)) {
+        const label = tipologieBene[k] || k;
+        const isFab = tipologieFabbricati.includes(k);
+        tipoSummary += (isFab ? '<strong style="color:var(--accent)">' : '') + label + ': &euro;' + fmtInt(v) + (isFab ? '</strong>' : '') + '<br>';
+    }
+    document.getElementById('assetTotalByTipo').innerHTML = tipoSummary;
+
+    // By category summary
+    let catSummary = '';
+    for (const [k, v] of Object.entries(totByCat)) {
+        catSummary += k + ': &euro;' + fmtInt(v) + '<br>';
+    }
+    document.getElementById('assetTotalByCategory').innerHTML = catSummary;
+
+    // Iper summary
+    document.getElementById('assetTotalIper').innerHTML = countIper > 0
+        ? countIper + ' beni iper: &euro;' + fmtInt(totIper)
+        : 'Nessun bene iper';
+
+    // SYNC: update importo_investimento in Ammissibilita
+    syncImportoAmmissibilita(totale);
+
+    // Update fabbricati alert
+    showFabbricatiAlert();
+}
+
+function syncImportoAmmissibilita(totale) {
+    const field = document.getElementById('importo_investimento');
+    field.value = totale > 0 ? totale : '';
+}
+
+function resetForm(section) {
+    if (section === 'calcolo') {
+        // Reset asset table
+        document.getElementById('assetTableBody').innerHTML = '';
+        assetRowCounter = 0;
+        updateAssetTotals();
+        // Reset other fields in calcolo
+        const container = document.getElementById(section);
+        container.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+        container.querySelectorAll('.form-grid input[type=number]').forEach(i => { if(i.placeholder === '0') i.value = '0'; else i.value = ''; });
+        const res = container.querySelector('[id^="risultato"]');
+        if (res) res.innerHTML = '';
+        syncImportoAmmissibilita(0);
+        return;
+    }
+    const container = document.getElementById(section);
+    container.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+    container.querySelectorAll('input[type=number]').forEach(i => { if(i.placeholder === '0') i.value = '0'; else i.value = ''; });
+    container.querySelectorAll('input[type=text]').forEach(i => i.value = '');
+    const res = container.querySelector('[id^="risultato"]');
+    if (res) res.innerHTML = '';
+}
+
+// Init: add 3 empty rows on load
+document.addEventListener('DOMContentLoaded', function() { for(let i=0;i<3;i++) addAssetRow(); });
+
+// ============ VERIFICA AMMISSIBILITA ============
+function verificaAmmissibilita() {
+    const a = getAnagraficaData();
+    const dim = a.dimensione;
+    const reg = a.regione;
+    const sett = a.settore;
+    const anno = a.anno;
+    const importo = parseFloat(document.getElementById('importo_investimento').value) || 0;
+    const tipo = a.tipologia;
+    const diff = a.inDifficolta;
+    const durc = a.durc;
+
+    if (!dim || !reg || !sett || !anno || !importo || !tipo || !diff || !durc) {
+        document.getElementById('risultato_ammissibilita').innerHTML = '<div class="result-box warning"><h3>Dati incompleti</h3><p>Compila tutti i campi per procedere.</p></div>';
+        return;
+    }
+
+    let checks = [];
+    let ammissibile = true;
+
+    if (settoriEsclusi.includes(sett)) {
+        checks.push({ok: false, text: 'Settore ESCLUSO (art. 16, c. 3, D.L. 124/2023): siderurgica, carbonifera, trasporti, energia, banda larga, creditizio/finanziario/assicurativo'});
+        ammissibile = false;
+    } else { checks.push({ok: true, text: 'Settore di attivit\u00e0 ammissibile'}); }
+
+    if (diff === 'si') {
+        checks.push({ok: false, text: 'Impresa in difficolt\u00e0: ESCLUSA (art. 2, punto 18, Reg. 651/2014)'});
+        ammissibile = false;
+    } else { checks.push({ok: true, text: 'Impresa non in stato di difficolt\u00e0'}); }
+
+    if (durc === 'no') {
+        checks.push({ok: false, text: 'DURC non regolare: requisito mancante'});
+        ammissibile = false;
+    } else { checks.push({ok: true, text: 'DURC regolare in corso di validit\u00e0'}); }
+
+    if (importo < 200000) {
+        checks.push({ok: false, text: 'Investimento < 200.000 \u20ac: NON agevolabile (art. 16, c. 4)'});
+        ammissibile = false;
+    } else { checks.push({ok: true, text: 'Investimento \u2265 200.000 \u20ac'}); }
+
+    if (importo > 100000000) checks.push({warn: true, text: 'Importo > 100 M\u20ac: credito limitato al max di 100 M\u20ac per progetto'});
+
+    checks.push({ok: true, text: 'Struttura produttiva in ' + nomiRegioni[reg] + ' - territorio ZES unica ammissibile'});
+    checks.push({ok: true, text: 'Progetto investimento iniziale: ' + tipo});
+
+    const dimKey = (dim === 'micro') ? 'piccola' : dim;
+    checks.push({ok: true, text: 'Intensit\u00e0 massima applicabile: ' + intensita[reg][dimKey] + '% (ESL)'});
+
+    let html = '<div class="result-box ' + (ammissibile ? 'success' : 'error') + '">';
+    html += '<h3>' + (ammissibile ? '\u2705 INVESTIMENTO AMMISSIBILE' : '\u274c INVESTIMENTO NON AMMISSIBILE') + '</h3>';
+    html += '</div><ul class="checklist" style="margin-top:12px;">';
+    checks.forEach(c => {
+        const icon = c.ok ? '<span class="check-ok">\u2714</span>' : (c.warn ? '<span class="check-warn">\u26a0</span>' : '<span class="check-ko">\u2718</span>');
+        html += '<li><span class="icon">' + icon + '</span>' + c.text + '</li>';
+    });
+    html += '</ul>';
+    document.getElementById('risultato_ammissibilita').innerHTML = html;
+}
+
+// ============ CALCOLO CREDITO ZES ============
+function calcolaCredito() {
+    const a = getAnagraficaData();
+    const dim = a.dimensione;
+    const reg = a.regione;
+    const dimIntensita = (dim === 'micro') ? 'piccola' : dim;
+    const step = document.getElementById('calc_step').value;
+    if (!dim || !reg) { document.getElementById('risultato_calcolo').innerHTML = '<div class="result-box warning"><h3>Seleziona dimensione e regione nella scheda Anagrafica</h3></div>'; return; }
+
+    const assets = getAssetData();
+    const altriAiuti = parseFloat(document.getElementById('calc_altri_aiuti').value) || 0;
+    const altreAgev = parseFloat(document.getElementById('calc_altre_agev').value) || 0;
+
+    // Classify assets
+    let totBeniMobili = 0;
+    let immobili = 0;
+    let totIper = 0;
+    let countIper = 0;
+    let dettaglioBeni = [];
+
+    assets.forEach(a => {
+        if (a.importo <= 0) return;
+        const isImmobile = tipologieFabbricati.includes(a.tipo);
+        if (isImmobile) {
+            immobili += a.importo;
+        } else {
+            totBeniMobili += a.importo;
+        }
+        if (a.iper) { totIper += a.importo; countIper++; }
+        dettaglioBeni.push({
+            desc: a.desc || 'Bene n.' + (dettaglioBeni.length + 1),
+            importo: a.importo,
+            tipo: a.tipo,
+            tipoLabel: tipologieBene[a.tipo] || '-',
+            cat: a.cat,
+            catLabel: categorieZES[a.cat] || '-',
+            iper: a.iper ? tipologieIper[a.iper] : 'No',
+            isImmobile: isImmobile
+        });
+    });
+
+    const totInvestimento = totBeniMobili + immobili;
+    if (totInvestimento === 0) { document.getElementById('risultato_calcolo').innerHTML = '<div class="result-box warning"><h3>Inserisci almeno un bene con importo</h3></div>'; return; }
+
+    const maxImmobili = totBeniMobili;  // fabbricati agevolabili ≤ altri beni (art. 16 c. 4: max 50% investimento agevolato)
+    const immobiliAgevolabili = Math.min(immobili, maxImmobili);
+    const totAgevolabile = totBeniMobili + immobiliAgevolabili;
+    const totCapped = Math.min(totAgevolabile, 100000000);
+
+    let pct = intensita[reg][dimIntensita];
+    if (step === 'si') { pct += zoneA.includes(reg) ? 10 : (zoneC.includes(reg) ? 5 : 0); }
+
+    let creditoLordo;
+    if (dim === 'grande' && totCapped > 50000000) {
+        const R = intensita[reg]['grande'] / 100;
+        const A = Math.min(totCapped, 55000000);
+        const B = Math.max(0, Math.min(totCapped, 100000000) - 55000000);
+        creditoLordo = R * (A + 0.5 * B);
+    } else { creditoLordo = totCapped * (pct / 100); }
+
+    const creditoNetto = Math.max(0, creditoLordo - altriAiuti);
+    const totaleAgevolazioni = creditoNetto + altriAiuti + altreAgev;
+    const superamento = totaleAgevolazioni > totAgevolabile;
+
+    // Build output
+    let html = '<div class="grid-3">';
+    html += '<div class="stat-card"><div class="stat-value">\u20ac ' + fmtInt(totAgevolabile) + '</div><div class="stat-label">Investimento Agevolabile</div></div>';
+    html += '<div class="stat-card" style="background:linear-gradient(135deg,#38a169,#48bb78)"><div class="stat-value">\u20ac ' + fmtInt(creditoNetto) + '</div><div class="stat-label">Credito ZES</div></div>';
+    html += '<div class="stat-card" style="background:linear-gradient(135deg,#d69e2e,#ecc94b);color:#2d3748"><div class="stat-value">' + fmtPct(pct) + '</div><div class="stat-label">Intensit\u00e0</div></div>';
+    html += '</div>';
+
+    if (immobili > maxImmobili) html += '<div class="result-box warning" style="margin-top:12px;"><p><strong>Attenzione:</strong> Fabbricati/terreni ridotti a \u20ac ' + fmt(immobiliAgevolabili) + ' (non possono eccedere la quota degli altri beni: \u20ac ' + fmt(totBeniMobili) + ' &mdash; art. 16, c. 4, D.L. 124/2023)</p></div>';
+    if (totInvestimento < 200000) html += '<div class="result-box error" style="margin-top:12px;"><p><strong>Investimento < 200.000 \u20ac:</strong> non agevolabile.</p></div>';
+    if (superamento) html += '<div class="result-box error" style="margin-top:12px;"><p><strong>Superamento limiti:</strong> cumulo agevolazioni (' + fmt(totaleAgevolazioni) + ' \u20ac) supera investimento agevolabile.</p></div>';
+
+    // Credito fruibile nel rispetto del limite 75% GBER
+    // Art. 7 co. 6 D.M. 17/5/2024 -> Art. 14 par. 14 Reg. (UE) 651/2014
+    const massimoPubblico3 = totAgevolabile * 0.75;
+    const spazioResiduo3 = Math.max(0, massimoPubblico3 - altriAiuti - altreAgev);
+    const creditoFruibile3 = Math.min(creditoNetto, spazioResiduo3);
+    const contributoProprio3 = totAgevolabile - Math.min(totaleAgevolazioni, massimoPubblico3);
+    const pctAiutoPubblico3 = totAgevolabile > 0 ? (Math.min(totaleAgevolazioni, massimoPubblico3) / totAgevolabile * 100) : 0;
+
+    // Dettaglio per bene
+    html += '<div class="card" style="margin-top:16px;"><h3>Dettaglio per Bene</h3><table>';
+    html += '<thead><tr><th>Bene</th><th>Tipologia</th><th>Categoria ZES</th><th style="text-align:right">Importo</th><th>Iper</th></tr></thead><tbody>';
+    dettaglioBeni.forEach(b => {
+        const iperStyle = b.iper !== 'No' ? 'color:var(--iper);font-weight:600;' : 'color:var(--text-light);';
+        const fabBadge = b.isImmobile ? ' <span class="fab-warning-badge">50%</span>' : '';
+        html += '<tr><td>' + b.desc + '</td><td style="font-size:0.82rem;">' + b.tipoLabel + fabBadge + '</td><td style="font-size:0.82rem;">' + b.catLabel + '</td><td style="text-align:right">\u20ac ' + fmt(b.importo) + '</td><td style="' + iperStyle + 'font-size:0.82rem;">' + b.iper + '</td></tr>';
+    });
+    html += '</tbody></table>';
+
+    // Riepilogo
+    html += '<table style="margin-top:12px;">';
+    html += '<tr><td>Totale beni mobili</td><td style="text-align:right">\u20ac ' + fmt(totBeniMobili) + '</td></tr>';
+    html += '<tr><td>Immobili/terreni' + (immobili > maxImmobili ? ' (ridotti: eccedono altri beni)' : '') + '</td><td style="text-align:right">\u20ac ' + fmt(immobiliAgevolabili) + '</td></tr>';
+    html += '<tr style="font-weight:700;border-top:2px solid var(--primary)"><td>Totale agevolabile</td><td style="text-align:right">\u20ac ' + fmt(totAgevolabile) + '</td></tr>';
+    html += '<tr><td>Intensit\u00e0 applicata</td><td style="text-align:right">' + fmtPct(pct) + '</td></tr>';
+    html += '<tr><td>Credito lordo</td><td style="text-align:right">\u20ac ' + fmt(creditoLordo) + '</td></tr>';
+    html += '<tr><td>(-) Altri aiuti di Stato</td><td style="text-align:right">\u20ac ' + fmt(altriAiuti) + '</td></tr>';
+    html += '<tr style="font-weight:700;color:var(--success);border-top:2px solid var(--success)"><td>CREDITO ZES NETTO</td><td style="text-align:right">\u20ac ' + fmt(creditoNetto) + '</td></tr>';
+    html += '<tr style="background:#f9f3ec;"><td style="font-size:0.82rem;color:var(--text-light);">Massimo aiuto pubblico (75% costi &mdash; art. 14 par. 14 GBER)</td><td style="text-align:right;font-size:0.82rem;color:var(--text-light);">\u20ac ' + fmt(massimoPubblico3) + '</td></tr>';
+    html += '<tr style="background:#f9f3ec;"><td style="font-size:0.82rem;color:var(--text-light);">(-) Altri aiuti gi\u00e0 computati</td><td style="text-align:right;font-size:0.82rem;color:var(--text-light);">\u20ac ' + fmt(altriAiuti + altreAgev) + '</td></tr>';
+    const coloreFruibile3 = creditoFruibile3 < creditoNetto ? '#c53030' : 'var(--success)';
+    html += '<tr style="font-weight:700;border-top:2px solid ' + coloreFruibile3 + ';color:' + coloreFruibile3 + '"><td>CREDITO ZES EFFETTIVAMENTE FRUIBILE <span style="font-weight:400;font-size:0.78rem;">(art. 14 par. 14 GBER)</span></td><td style="text-align:right">\u20ac ' + fmt(creditoFruibile3) + '</td></tr>';
+    html += '<tr style="background:#f9f3ec;"><td style="font-size:0.82rem;color:var(--text-light);">Contributo proprio minimo (25%)</td><td style="text-align:right;font-size:0.82rem;color:var(--text-light);">\u20ac ' + fmt(contributoProprio3) + '</td></tr>';
+    html += '</table>';
+
+    if (countIper > 0) {
+        html += '<div class="result-box iper" style="margin-top:12px;"><h3>Beni eleggibili Iperammortamento</h3>';
+        html += '<p>' + countIper + ' beni per un totale di <strong>\u20ac ' + fmt(totIper) + '</strong> risultano potenzialmente eleggibili per l\'iperammortamento (commi 427-436).</p>';
+        html += '<p style="font-size:0.82rem;">Vai alla sezione <em>Cumulo ZES + Iperammortamento</em> per calcolare il beneficio combinato per ciascun bene.</p></div>';
+    }
+
+    html += '</div>';
+    document.getElementById('risultato_calcolo').innerHTML = html;
+
+    // Salva risultati ZES per uso nella sezione Cumulo
+    window._risultatoZES = {
+        creditoLordo: creditoLordo,
+        creditoNetto: creditoNetto,
+        pctIntensita: pct,
+        totAgevolabile: totAgevolabile,
+        totInvestimento: totInvestimento,
+        altriAiuti: altriAiuti,
+        altreAgev: altreAgev,
+        dimensione: dim,
+        regione: reg,
+        calcolato: true
+    };
+}
+
+// ============ CALCOLO IPERAMMORTAMENTO ============
+function calcolaIperammortamento(costo, altreSovvenzioni) {
+    // Base di calcolo = costo al netto delle altre sovvenzioni (c. 431)
+    const base = Math.max(0, costo - altreSovvenzioni);
+    const capIper = 20000000; // max 20M
+
+    if (base <= 0) return { maggiorazione: 0, quotaMaggiorata: 0, dettaglio: [] };
+
+    const baseEff = Math.min(base, capIper);
+    let maggiorazione = 0;
+    let dettaglio = [];
+
+    // Scaglione 1: fino a 2.5M -> 180%
+    const s1 = Math.min(baseEff, 2500000);
+    if (s1 > 0) {
+        const m1 = s1 * 1.80;
+        maggiorazione += m1;
+        dettaglio.push({scaglione: 'Fino a 2,5M\u20ac', base: s1, pct: 180, maggiorazione: m1});
+    }
+
+    // Scaglione 2: 2.5M-10M -> 100%
+    const s2 = Math.max(0, Math.min(baseEff, 10000000) - 2500000);
+    if (s2 > 0) {
+        const m2 = s2 * 1.00;
+        maggiorazione += m2;
+        dettaglio.push({scaglione: '2,5M - 10M\u20ac', base: s2, pct: 100, maggiorazione: m2});
+    }
+
+    // Scaglione 3: 10M-20M -> 50%
+    const s3 = Math.max(0, Math.min(baseEff, 20000000) - 10000000);
+    if (s3 > 0) {
+        const m3 = s3 * 0.50;
+        maggiorazione += m3;
+        dettaglio.push({scaglione: '10M - 20M\u20ac', base: s3, pct: 50, maggiorazione: m3});
+    }
+
+    return { maggiorazione, quotaMaggiorata: base + maggiorazione, dettaglio };
+}
+
+// ============ SYNC BENI CUMULO ============
+function syncCumuloBeni() {
+    const assets = getAssetData().filter(a => a.importo > 0);
+    const tbody = document.getElementById('cumuloBeniTableBody');
+    const table = document.getElementById('cumuloBeniTable');
+    const emptyMsg = document.getElementById('cumuloBeniEmpty');
+    const zesBanner = document.getElementById('cumuloZesBanner');
+
+    if (assets.length === 0) {
+        table.style.display = 'none';
+        emptyMsg.style.display = '';
+        zesBanner.style.display = 'none';
+        return;
+    }
+    table.style.display = '';
+    emptyMsg.style.display = 'none';
+
+    // Mostra banner con risultato ZES dalla scheda precedente
+    const zes = window._risultatoZES;
+    if (zes && zes.calcolato) {
+        const dimLabel = {micro:'Micro',piccola:'Piccola',media:'Media',grande:'Grande'}[zes.dimensione] || zes.dimensione;
+        zesBanner.style.display = '';
+        zesBanner.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">'
+            + '<div><strong>Risultato Calcolo ZES (dalla scheda precedente):</strong><br>'
+            + dimLabel + ' impresa | ' + nomiRegioni[zes.regione] + ' | Intensit\u00e0: ' + fmtPct(zes.pctIntensita) + '</div>'
+            + '<div style="display:flex;gap:16px;flex-wrap:wrap;">'
+            + '<div style="text-align:center;"><div style="font-size:0.72rem;opacity:0.7;">Investimento agevolabile</div><div style="font-size:1.2rem;font-weight:700;">\u20ac ' + fmtInt(zes.totAgevolabile) + '</div></div>'
+            + '<div style="text-align:center;"><div style="font-size:0.72rem;opacity:0.7;">Credito ZES netto</div><div style="font-size:1.2rem;font-weight:700;color:var(--success);">\u20ac ' + fmtInt(zes.creditoNetto) + '</div></div>'
+            + '</div></div>';
+    } else {
+        zesBanner.style.display = '';
+        zesBanner.innerHTML = '<strong>Credito ZES non ancora calcolato.</strong> Esegui prima il calcolo nella scheda <em>Calcolo ZES</em> per vedere il credito collegato.';
+        zesBanner.className = 'result-box warning';
+    }
+
+    let html = '';
+    assets.forEach((a, idx) => {
+        const descr = a.desc || 'Bene n.' + (idx + 1);
+        const tipoLabel = tipologieBene[a.tipo] || '-';
+        const catLabel = categorieZES[a.cat] || '-';
+        const hasIper = !!a.iper;
+        const isImmobile = tipologieFabbricati.includes(a.tipo);
+        const coeffLabel = hasIper ? (a.coeffAmm || 20) + '%' : '-';
+
+        // Determina agevolazioni cumulabili
+        let badges = '';
+        // 1. ZES - sempre presente
+        badges += '<span class="agev-badge agev-zes">Credito ZES</span>';
+
+        // 2. Iperammortamento - solo se eleggibile e selezionato
+        if (hasIper) {
+            badges += '<span class="agev-badge agev-iper">Iper 2026 (' + tipologieIper[a.iper].split(' - ')[0] + ')</span>';
+        } else if (isImmobile) {
+            badges += '<span class="agev-badge agev-no">Iper: non eleggibile (immobile)</span>';
+        } else {
+            badges += '<span class="agev-badge agev-no">Iper: non selezionato</span>';
+        }
+
+        // 3. De minimis - sempre cumulabile
+        badges += '<span class="agev-badge agev-deminimis">De minimis</span>';
+
+        // 4. Nuova Sabatini - regime d'aiuto: cumulabile con ZES nel rispetto del limite di intensità
+        badges += '<span class="agev-badge agev-sabatini">⚠ Sabatini (aiuto Stato)</span>';
+
+        // 5. Credito 4.0 - NON cumulabile con iper
+        if (hasIper) {
+            badges += '<span class="agev-badge agev-no">Credito 4.0: NO con Iper</span>';
+        } else {
+            badges += '<span class="agev-badge agev-zes">Credito 4.0</span>';
+        }
+
+        html += '<tr class="cumulo-beni-row">';
+        html += '<td>' + (idx + 1) + '</td>';
+        html += '<td>' + descr + (isImmobile ? ' <span class="fab-warning-badge">IMM</span>' : '') + '</td>';
+        html += '<td style="text-align:right">\u20ac ' + fmt(a.importo) + '</td>';
+        html += '<td>' + tipoLabel + '</td>';
+        html += '<td>' + catLabel + '</td>';
+        html += '<td style="text-align:center">' + coeffLabel + '</td>';
+        html += '<td class="agev-cell">' + badges + '</td>';
+        html += '</tr>';
+    });
+    tbody.innerHTML = html;
+}
+
+// ============ CALCOLO CUMULO ============
+function calcolaCumulo() {
+    // Legge dimensione e regione da Anagrafica
+    const a = getAnagraficaData();
+    const dim = a.dimensione;
+    const reg = a.regione;
+    const dimIntensita = (dim === 'micro') ? 'piccola' : dim;
+    if (!dim || !reg) {
+        document.getElementById('risultato_cumulo').innerHTML = '<div class="result-box warning"><h3>Dati mancanti</h3><p>Seleziona prima <strong>Dimensione Impresa</strong> e <strong>Regione</strong> nella scheda <em>Anagrafica Impresa</em>.</p></div>';
+        return;
+    }
+
+    const aliquota = a.aliquota;
+    const aliquotaIRES = aliquota / 100; // solo IRES per l'iperammortamento (deduzione IRES)
+    // Usa l'intensità già calcolata dalla scheda "Calcolo ZES" (include eventuale bonus STEP).
+    // Se il calcolo ZES non è ancora stato eseguito, ricade sull'intensità base.
+    const _zes = window._risultatoZES;
+    const pctZES = (_zes && _zes.calcolato && _zes.regione === reg && _zes.dimensione === dim)
+        ? _zes.pctIntensita
+        : intensita[reg][dimIntensita];
+
+    // Legge tutti i beni dal Calcolo ZES
+    const assets = getAssetData().filter(a => a.importo > 0);
+    if (assets.length === 0) {
+        document.getElementById('risultato_cumulo').innerHTML = '<div class="result-box warning"><h3>Nessun bene inserito</h3><p>Inserisci almeno un bene nella sezione <em>Calcolo ZES</em>.</p></div>';
+        return;
+    }
+
+    // Legge altri aiuti dal Calcolo ZES
+    const altriAiutiGlobali = parseFloat(document.getElementById('calc_altri_aiuti').value) || 0;
+    const altreAgevGlobali = parseFloat(document.getElementById('calc_altre_agev').value) || 0;
+
+    const totInvestimento = assets.reduce((s, x) => s + x.importo, 0);
+
+    // ── CAP FABBRICATI (art. 16 c. 4 D.L. 124/2023) ───────────────────────
+    // I fabbricati/terreni agevolabili non possono eccedere la quota degli altri beni.
+    // La quota eccedente non genera credito ZES.
+    const totFabbricatiLordo = assets
+        .filter(a => tipologieFabbricati.includes(a.tipo))
+        .reduce((s, a) => s + a.importo, 0);
+    const totAltriBeni = totInvestimento - totFabbricatiLordo;
+    const totFabbricatiAgevolabili = Math.min(totFabbricatiLordo, totAltriBeni);
+    // Rapporto di riduzione per i fabbricati: se eccedono, ogni bene-fabbricato
+    // viene ridotto proporzionalmente alla propria quota sul totale fabbricati.
+    const ratioFab = totFabbricatiLordo > 0
+        ? totFabbricatiAgevolabili / totFabbricatiLordo
+        : 1;
+
+    // ── PASSO 1: calcolo per bene (creditoZES e baseIper) ──────────────────
+    let tempBeni = [];
+    let totCostoGlobale = 0;     // somma costi agevolabili (fabbricati già cappati)
+    let totCostoLordo = 0;       // somma costi lordi (base per cap GBER art. 14 par. 14)
+    let totCreditoZES = 0;
+    let totBaseIperGlobale = 0;   // somma delle basi iper di TUTTI i beni iperammortizzabili
+    let countIper = 0;
+    let countNonIper = 0;
+
+    assets.forEach((a, idx) => {
+        const descr = a.desc || 'Bene n.' + (idx + 1);
+        const costo = a.importo;
+        const hasIper = !!a.iper;
+        const isImmobile = tipologieFabbricati.includes(a.tipo);
+        const coeffBene = a.coeffAmm || 20;
+        const anniAmmBene = Math.ceil(100 / coeffBene);
+        // Costo agevolabile: i fabbricati vengono scalati dal ratioFab se eccedono
+        const costoAgevolabile = isImmobile ? costo * ratioFab : costo;
+        const creditoZES = costoAgevolabile * (pctZES / 100);
+
+        let baseIper = 0;
+        if (hasIper) {
+            // Comma 431: base al netto del credito ZES e della quota proporzionale
+            // degli altri aiuti riferibili a questo bene (calcolata sul costoAgevolabile)
+            const quotaAltriAiuti = totInvestimento > 0
+                ? (altriAiutiGlobali + altreAgevGlobali) * (costoAgevolabile / totInvestimento)
+                : 0;
+            baseIper = Math.max(0, costoAgevolabile - creditoZES - quotaAltriAiuti);
+            totBaseIperGlobale += baseIper;
+            countIper++;
+        } else {
+            countNonIper++;
+        }
+
+        totCostoGlobale += costoAgevolabile;
+        totCostoLordo += costo;
+        totCreditoZES += creditoZES;
+
+        tempBeni.push({
+            idx: idx + 1, descr, costo, costoAgevolabile, hasIper, isImmobile,
+            tipoLabel: tipologieBene[a.tipo] || '-',
+            catLabel: categorieZES[a.cat] || '-',
+            iperLabel: a.iper ? tipologieIper[a.iper] : '',
+            coeffBene, anniAmmBene, baseIper, creditoZES
+        });
+    });
+
+    // ── PASSO 2: scaglioni applicati UNA SOLA VOLTA sul totale investimento iper ──
+    // Gli scaglioni (180%/100%/50%) si cumulano sull'intera base iper aggregata,
+    // non su ogni singolo bene.
+    const risultatoIperGlobale = calcolaIperammortamento(totBaseIperGlobale, 0);
+    const totMaggiorazioneIper = risultatoIperGlobale.maggiorazione;
+
+    // ── PASSO 3: distribuzione proporzionale della maggiorazione per bene ───
+    let risultatiBeni = [];
+    let totRisparmiIper = 0;
+    const totBaseIper = totBaseIperGlobale;
+
+    tempBeni.forEach(b => {
+        let maggiorazioneIper = 0;
+        let risparmiofiscaleIper = 0;
+
+        if (b.hasIper && totBaseIperGlobale > 0) {
+            // Quota di maggiorazione proporzionale alla base di questo bene
+            maggiorazioneIper = totMaggiorazioneIper * (b.baseIper / totBaseIperGlobale);
+            risparmiofiscaleIper = maggiorazioneIper * aliquotaIRES; // solo IRES
+        }
+
+        const beneficioTotale = b.creditoZES + risparmiofiscaleIper;
+        const incidenza = b.costoAgevolabile > 0 ? (beneficioTotale / b.costoAgevolabile * 100) : 0;
+
+        totRisparmiIper += risparmiofiscaleIper;
+
+        risultatiBeni.push({
+            ...b,
+            maggiorazioneIper,
+            risultatoIper: risultatoIperGlobale, // riferimento globale (per display info)
+            risparmiofiscaleIper,
+            beneficioTotale,
+            incidenza
+        });
+    });
+
+    const beneficioGlobale = totCreditoZES + totRisparmiIper;
+
+    // ---- OUTPUT ----
+    let html = '';
+
+    // Header dati impresa
+    const dimLabelOutput = {micro:'Micro',piccola:'Piccola',media:'Media',grande:'Grande'}[dim] || dim;
+    html += '<div class="info-banner" style="margin-bottom:16px;"><strong>Dati impresa:</strong> ' + dimLabelOutput + ' impresa | ' + nomiRegioni[reg] + ' | Intensit\u00e0 ZES: ' + pctZES + '% | IRES ' + aliquota + '%</div>';
+
+    // Stat cards globali
+    html += '<div class="grid-4">';
+    html += '<div class="stat-card"><div class="stat-value">\u20ac ' + fmtInt(totCostoGlobale) + '</div><div class="stat-label">Investimento Totale</div></div>';
+    html += '<div class="stat-card" style="background:linear-gradient(135deg,#7B3010,#C4591A)"><div class="stat-value">\u20ac ' + fmtInt(totCreditoZES) + '</div><div class="stat-label">Credito ZES Totale</div></div>';
+    html += '<div class="stat-card iper"><div class="stat-value">\u20ac ' + fmtInt(totRisparmiIper) + '</div><div class="stat-label">Risparmio Iper Totale</div></div>';
+    html += '<div class="stat-card" style="background:linear-gradient(135deg,#38a169,#48bb78)"><div class="stat-value">\u20ac ' + fmtInt(beneficioGlobale) + '</div><div class="stat-label">Beneficio Complessivo</div></div>';
+    html += '</div>';
+
+    // Tabella riepilogativa di tutti i beni
+    html += '<div class="card" style="margin-top:16px;"><h3>Riepilogo Cumulo per Bene</h3>';
+    html += '<table><thead><tr><th>#</th><th>Bene</th><th style="text-align:right">Costo agevolabile</th><th style="text-align:right">Credito ZES</th><th class="iper-th" style="text-align:right">Base Iper (c.431)</th><th class="iper-th" style="text-align:right">Maggioraz.</th><th class="iper-th" style="text-align:right">Risparmio</th><th style="text-align:right">Beneficio Tot.</th><th style="text-align:right">%</th></tr></thead><tbody>';
+    risultatiBeni.forEach(b => {
+        const iperStyle = b.hasIper ? '' : 'color:var(--text-light);';
+        const ridotto = b.isImmobile && b.costoAgevolabile < b.costo;
+        html += '<tr>';
+        html += '<td>' + b.idx + '</td>';
+        html += '<td>' + b.descr + (b.isImmobile ? ' <span class="fab-warning-badge">IMM</span>' : '') + (ridotto ? ' <span class="fab-warning-badge" style="background:#c53030;color:white;" title="Eccedenza fabbricati: ridotto da \u20ac' + fmt(b.costo) + '">50% cap</span>' : '') + '</td>';
+        html += '<td style="text-align:right">\u20ac ' + fmt(b.costoAgevolabile) + (ridotto ? '<br><span style="font-size:0.72rem;color:var(--accent);">(lordo: \u20ac ' + fmt(b.costo) + ')</span>' : '') + '</td>';
+        html += '<td style="text-align:right">\u20ac ' + fmt(b.creditoZES) + '</td>';
+        html += '<td style="text-align:right;' + iperStyle + '">' + (b.hasIper ? '\u20ac ' + fmt(b.baseIper) : '-') + '</td>';
+        html += '<td style="text-align:right;' + iperStyle + '">' + (b.hasIper ? '\u20ac ' + fmt(b.maggiorazioneIper) : '-') + '</td>';
+        html += '<td style="text-align:right;' + iperStyle + '">' + (b.hasIper ? '\u20ac ' + fmt(b.risparmiofiscaleIper) : '-') + '</td>';
+        html += '<td style="text-align:right;font-weight:600;color:var(--success)">\u20ac ' + fmt(b.beneficioTotale) + '</td>';
+        html += '<td style="text-align:right">' + fmtPct(b.incidenza) + '</td>';
+        html += '</tr>';
+    });
+    // Riga totali
+    html += '<tr style="font-weight:700;border-top:2px solid var(--primary);background:#edf2f7;">';
+    html += '<td></td><td>TOTALE</td>';
+    html += '<td style="text-align:right">\u20ac ' + fmt(totCostoGlobale) + '</td>';
+    html += '<td style="text-align:right">\u20ac ' + fmt(totCreditoZES) + '</td>';
+    html += '<td style="text-align:right;color:var(--iper)">\u20ac ' + fmt(totBaseIper) + '</td>';
+    html += '<td style="text-align:right;color:var(--iper)">\u20ac ' + fmt(totMaggiorazioneIper) + '</td>';
+    html += '<td style="text-align:right;color:var(--iper)">\u20ac ' + fmt(totRisparmiIper) + '</td>';
+    html += '<td style="text-align:right;color:var(--success)">\u20ac ' + fmt(beneficioGlobale) + '</td>';
+    html += '<td style="text-align:right">' + (totCostoGlobale > 0 ? fmtPct(beneficioGlobale / totCostoGlobale * 100) : '-') + '</td>';
+    html += '</tr></tbody></table></div>';
+
+    // Dettaglio per ciascun bene con iper
+    const beniIper = risultatiBeni.filter(b => b.hasIper);
+    if (beniIper.length > 0) {
+        html += '<h3 style="margin-top:20px;color:var(--iper);">Dettaglio Iperammortamento</h3>';
+
+        // ── Tabella scaglioni GLOBALE (applicata sull'intero investimento iper) ──
+        html += '<div class="card" style="border-left:4px solid var(--iper);margin-bottom:12px;">';
+        html += '<h3 style="margin-top:0;color:var(--iper);">Scaglioni applicati sul totale investimento iperammortizzabile</h3>';
+        html += '<div class="info-banner iper-banner" style="margin:8px 0;">'
+            + '<strong>Nota:</strong> Gli scaglioni (180%/100%/50%) si applicano sull\'<strong>intera base iper aggregata</strong> (\u20ac ' + fmt(totBaseIper) + '), non per singolo bene. '
+            + 'La maggiorazione complessiva (\u20ac ' + fmt(totMaggiorazioneIper) + ') viene poi ripartita proporzionalmente tra i beni in base alla rispettiva quota di base.'
+            + '</div>';
+        html += '<table style="margin-top:8px;"><thead><tr><th class="iper-th">Scaglione</th><th class="iper-th" style="text-align:right">Base (totale)</th><th class="iper-th" style="text-align:right">%</th><th class="iper-th" style="text-align:right">Maggiorazione</th></tr></thead><tbody>';
+        risultatoIperGlobale.dettaglio.forEach(d => {
+            html += '<tr><td>' + d.scaglione + '</td><td style="text-align:right">\u20ac ' + fmt(d.base) + '</td><td style="text-align:right">' + d.pct + '%</td><td style="text-align:right">\u20ac ' + fmt(d.maggiorazione) + '</td></tr>';
+        });
+        html += '<tr style="font-weight:700;border-top:2px solid var(--iper)"><td>Totale maggiorazione</td><td style="text-align:right">\u20ac ' + fmt(totBaseIper) + '</td><td></td><td style="text-align:right">\u20ac ' + fmt(totMaggiorazioneIper) + '</td></tr>';
+        html += '</tbody></table></div>';
+
+    }
+
+    // Beni senza iper - riepilogo sintetico
+    const beniNoIper = risultatiBeni.filter(b => !b.hasIper);
+    if (beniNoIper.length > 0) {
+        html += '<div class="card" style="margin-top:16px;border-left:4px solid var(--text-light);">';
+        html += '<h3>Beni senza Iperammortamento (' + beniNoIper.length + ')</h3>';
+        html += '<p style="font-size:0.88rem;color:var(--text-light);margin-bottom:8px;">Per questi beni &egrave; disponibile solo il credito ZES al ' + pctZES + '%.</p>';
+        html += '<table><thead><tr><th>#</th><th>Bene</th><th style="text-align:right">Costo</th><th style="text-align:right">Credito ZES</th></tr></thead><tbody>';
+        beniNoIper.forEach(b => {
+            html += '<tr><td>' + b.idx + '</td><td>' + b.descr + '</td><td style="text-align:right">\u20ac ' + fmt(b.costoAgevolabile) + '</td><td style="text-align:right">\u20ac ' + fmt(b.creditoZES) + '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+    }
+
+    // Beneficio fruibile nel rispetto del limite 75% GBER
+    // Art. 7 co. 6 D.M. 17/5/2024 -> Art. 14 par. 14 Reg. (UE) 651/2014
+    // Il massimo aiuto pubblico si calcola sul COSTO LORDO dell'investimento (non sul valore agevolabile ridotto)
+    const totAiutoPubblicoGlobale = beneficioGlobale + altriAiutiGlobali + altreAgevGlobali;
+    const massimoPubblico4 = totCostoLordo * 0.75;
+    const beneficioFruibile4 = Math.max(0, Math.min(beneficioGlobale, massimoPubblico4 - altriAiutiGlobali - altreAgevGlobali));
+    const contributoProprio4 = totCostoLordo - Math.min(totAiutoPubblicoGlobale, massimoPubblico4);
+
+    // Riquadro evidenziato GBER - Art. 14 par. 14
+    const ridotto4 = beneficioFruibile4 < beneficioGlobale;
+    const cb4 = ridotto4 ? '#c53030' : '#2E7D7D';
+    const cbg4 = ridotto4 ? '#fff5f5' : '#f0faf8';
+    html += '<div style="margin-top:20px;border:3px solid ' + cb4 + ';border-radius:10px;background:' + cbg4 + ';padding:18px 22px;box-shadow:0 2px 10px rgba(0,0,0,0.08);">';
+    html += '<div style="font-size:0.75rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:' + cb4 + ';margin-bottom:10px;">';
+    html += (ridotto4 ? '\u26a0\ufe0f Beneficio ridotto &mdash; limite GBER applicato' : '\u2714\ufe0f Beneficio conforme al limite GBER');
+    html += '</div>';
+    html += '<div style="font-size:0.72rem;color:#777;margin-bottom:14px;">Art. 14 par. 14 Reg. (UE) 651/2014 &rarr; Art. 7 co. 6 D.M. 17/5/2024 &mdash; il beneficiario deve apportare almeno il 25% dei costi con risorse prive di qualsiasi sostegno pubblico</div>';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">';
+    html += '<table style="border:none;font-size:0.85rem;flex:1;min-width:260px;">';
+    html += '<tr><td style="padding:3px 16px 3px 0;color:#555;">Beneficio complessivo calcolato (ZES + Iper)</td><td style="text-align:right;font-weight:600;">\u20ac ' + fmt(beneficioGlobale) + '</td></tr>';
+    html += '<tr><td style="padding:3px 16px 3px 0;color:#555;">Massimo aiuto pubblico (75% &times; \u20ac ' + fmt(totCostoLordo) + ' investimento lordo)</td><td style="text-align:right;font-weight:600;">\u20ac ' + fmt(massimoPubblico4) + '</td></tr>';
+    html += '<tr><td style="padding:3px 16px 3px 0;color:#555;">(-) Altri aiuti gi\u00e0 computati</td><td style="text-align:right;font-weight:600;">\u20ac ' + fmt(altriAiutiGlobali + altreAgevGlobali) + '</td></tr>';
+    html += '<tr style="border-top:1px solid #ccc;"><td style="padding:3px 16px 3px 0;color:#555;">Contributo proprio minimo (25% su investimento lordo)</td><td style="text-align:right;font-weight:600;">\u20ac ' + fmt(totCostoLordo * 0.25) + '</td></tr>';
+    html += '</table>';
+    html += '<div style="text-align:center;padding:12px 20px;background:' + cb4 + ';border-radius:8px;min-width:180px;">';
+    html += '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.85);margin-bottom:6px;">Beneficio effettivamente fruibile</div>';
+    html += '<div style="font-size:2.2rem;font-weight:800;color:#fff;line-height:1;">\u20ac ' + fmtInt(beneficioFruibile4) + '</div>';
+    html += (ridotto4 ? '<div style="font-size:0.68rem;color:rgba(255,255,255,0.75);margin-top:6px;">Ridotto rispetto al calcolato (\u20ac ' + fmt(beneficioGlobale - beneficioFruibile4) + ' non fruibile)</div>' : '<div style="font-size:0.68rem;color:rgba(255,255,255,0.75);margin-top:6px;">Nessuna riduzione necessaria</div>');
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    // Nota
+    html += '<div class="info-banner iper-banner" style="margin-top:16px;"><strong>Nota:</strong> Il credito ZES &egrave; un beneficio diretto (compensazione F24), l\'iperammortamento &egrave; un beneficio indiretto (riduzione base imponibile) distribuito sugli anni di ammortamento. Il comma 431 richiede che il sostegno non copra le medesime quote di costo: il credito ZES agisce sul costo dell\'investimento, l\'iperammortamento sulla quota di ammortamento fiscale.</div>';
+
+    document.getElementById('risultato_cumulo').innerHTML = html;
+}
+
+// ============ STAMPA REPORT ============
+function stampaReport() {
+    const nomeAzienda = document.getElementById('nome_azienda').value || 'Azienda non specificata';
+    const printHeader = document.getElementById('printAzienda');
+    const printData = document.getElementById('printData');
+    printHeader.textContent = 'Report ZES Unica 2026-2028 \u2014 ' + nomeAzienda;
+    const oggi = new Date();
+    printData.textContent = 'Generato il ' + oggi.toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'}) + ' alle ' + oggi.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'});
+
+    // Sincronizza la sezione cumulo prima della stampa
+    syncCumuloBeni();
+
+    window.print();
+}
+</script>
+
+<div style="text-align:center;padding:24px 32px 16px;color:#a09080;font-size:0.78rem;border-top:1px solid #e8ddd4;margin-top:8px;">
+    <img src="data:image/png;base64,[BASE64_REMOVED]" alt="Errendi S.r.l." style="height:32px;opacity:0.55;vertical-align:middle;margin-right:8px;">
+    <span>&copy; 2026 Errendi S.r.l. &mdash; Tutti i diritti riservati. Strumento ad uso interno. Non costituisce consulenza legale o fiscale.</span>
+</div>
+</body>
+</html>
