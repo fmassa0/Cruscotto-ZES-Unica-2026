@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cruscotto ZES Unica 2026–2028 | Ingenia</title>
+  <meta name="description" content="Simulatore e cruscotto operativo per il credito d'imposta ZES Unica 2026-2028. Calcola il tuo beneficio, scopri le aliquote e le scadenze." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ===== CSS CUSTOM PROPERTIES ===== */
+    :root {
+      --bg:           #F4F7FF;
+      --bg-hero:      #0C1F5B;
+      --surface:      #FFFFFF;
+      --surface-alt:  #EBF0FC;
+      --surface-card: #FFFFFF;
+      --border:       #CDD8F0;
+      --primary:      #0C1F5B;
+      --primary-mid:  #1A3A9A;
+      --accent:       #1E6AFF;
+      --accent-glow:  rgba(30,106,255,0.18);
+      --accent-2:     #00C4FF;
+      --text:         #0A1830;
+      --text-muted:   #5A6E96;
+      --text-inv:     #FFFFFF;
+      --success:      #0BC08D;
+      --warning:      #F59E0B;
+      --danger:       #EF4444;
+      --gold:         #F5A623;
+      --shadow-sm:    0 1px 4px rgba(12,31,91,0.08);
+      --shadow-md:    0 4px 20px rgba(12,31,91,0.12);
+      --shadow-lg:    0 12px 40px rgba(12,31,91,0.16);
+      --radius-sm:    6px;
+      --radius-md:    12px;
+      --radius-lg:    20px;
+      --radius-xl:    28px;
+      --transition:   0.25s cubic-bezier(0.4,0,0.2,1);
+      --font-head:    'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg:           #070D1F;
+      --bg-hero:      #050B18;
+      --surface:      #0F1A30;
+      --surface-alt:  #162040;
+      --surface-card: #112040;
+      --border:       #1C2E50;
+      --primary:      #3B74FF;
+      --primary-mid:  #2A5CE8;
+      --accent:       #4D8AFF;
+      --accent-glow:  rgba(77,138,255,0.2);
+      --accent-2:     #00D4FF;
+      --text:         #DDE8FF;
+      --text-muted:   #7A91C0;
+      --text-inv:     #FFFFFF;
+      --success:      #0FD4A0;
+      --warning:      #FBB42F;
+      --danger:       #F87171;
+      --gold:         #FBC04D;
+      --shadow-sm:    0 1px 4px rgba(0,0,0,0.4);
+      --shadow-md:    0 4px 20px rgba(0,0,0,0.5);
+      --shadow-lg:    0 12px 40px rgba(0,0,0,0.6);
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    /* ===== UTILITY ===== */
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* ===== HEADER / NAV ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 66px;
+      gap: 16px;
+    }
+
+    /* ===== LOGO ===== */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+    }
+
+    .logo-text-block {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-name {
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      color: var(--primary);
+      transition: color var(--transition);
+    }
+
+    .logo-tag {
+      font-size: 8.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .nav-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .nav-badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ===== DARK MODE TOGGLE ===== */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      background: var(--surface-alt);
+      border-radius: 100px;
+      padding: 6px 14px 6px 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: var(--font-body);
+      transition: all var(--transition);
+      border: 1px solid var(--border);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .toggle-track {
+      width: 36px; height: 20px;
+      background: var(--border);
+      border-radius: 100px;
+      position: relative;
+      transition: background var(--transition);
+    }
+
+    [data-theme="dark"] .toggle-track { background: var(--accent); }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: white;
+      transition: transform var(--transition);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    [data-theme="dark"] .toggle-thumb { transform: translateX(16px); }
+
+    .toggle-icon { font-size: 15px; }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #071540 0%, #0C2475 40%, #0A3A9C 70%, #0E2E78 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 72px 0 80px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 80% 40%, rgba(30,106,255,0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 70%, rgba(0,196,255,0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    }
+
+    /* Grid lines decoration */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 20px;
+    }
+
+    .hero-eyebrow svg { width: 14px; height: 14px; opacity: 0.8; }
+
+    .hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, #60A5FA, #00D4FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .hero-pill .pill-icon { font-size: 14px; }
+
+    .hero-stat-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      text-align: center;
+      min-width: 160px;
+    }
+
+    .stat-card .stat-val {
+      font-family: var(--font-head);
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+
+    .stat-card .stat-val span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .stat-card .stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .stat-card.accent-card {
+      background: rgba(30,106,255,0.3);
+      border-color: rgba(30,106,255,0.5);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main { padding: 48px 0 80px; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 20px; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    h2 {
+      font-family: var(--font-head);
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      margin-bottom: 32px;
+      max-width: 560px;
+    }
+
+    /* ===== SIMULATOR ===== */
+    .simulator-section { margin-bottom: 56px; }
+
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sim-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .sim-panel-title {
+      font-family: var(--font-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sim-panel-title svg {
+      width: 20px; height: 20px;
+      color: var(--accent);
+    }
+
+    /* Form controls */
+    .form-group { margin-bottom: 22px; }
+
+    label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    select, input[type="number"], input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      font-weight: 500;
+      outline: none;
+      transition: all var(--transition);
+      appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%235A6E96' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 40px;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .input-with-prefix {
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-right: none;
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .input-with-prefix input {
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      border-left-color: transparent;
+    }
+
+    .range-note {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ===== RESULT PANEL ===== */
+    .result-panel {
+      background: linear-gradient(160deg, #081840 0%, #0C2475 50%, #091D6A 100%);
+      border: 1px solid rgba(30,106,255,0.3);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .result-panel {
+      background: linear-gradient(160deg, #060D22 0%, #0A1845 50%, #07183D 100%);
+    }
+
+    .result-panel::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(30,106,255,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .result-panel-title {
+      font-family: var(--font-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-panel-title svg { width: 20px; height: 20px; color: #60A5FA; }
+
+    .result-main {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .result-label-sm {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+
+    .result-amount {
+      font-family: var(--font-head);
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .result-amount.updating {
+      opacity: 0.5;
+      transform: scale(0.97);
+    }
+
+    .result-euro {
+      font-size: 1.4rem;
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+    }
+
+    .result-sub-amount {
+      margin-top: 6px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .result-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.05);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .result-row-label {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .result-row-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .result-row-val.highlight { color: #60A5FA; }
+    .result-row-val.success { color: #0FD4A0; }
+    .result-row-val.warning { color: #FBB42F; }
+
+    .result-note {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.5;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid rgba(30,106,255,0.5);
+    }
+
+    .result-empty {
+      text-align: center;
+      padding: 32px 16px;
+      color: rgba(255,255,255,0.3);
+      font-size: 14px;
+    }
+
+    .result-empty svg {
+      width: 40px; height: 40px;
+      margin-bottom: 12px;
+      opacity: 0.3;
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-wrap {
+      background: rgba(255,255,255,0.08);
+      border-radius: 100px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #1E6AFF, #00C4FF);
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 16px;
+    }
+
+    /* ===== ALIQUOTE SECTION ===== */
+    .aliquote-section { margin-bottom: 56px; }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      width: fit-content;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ===== TABLE ===== */
+    .table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-mid) 100%);
+    }
+
+    th {
+      font-family: var(--font-head);
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      padding: 14px 18px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th:not(:first-child) { text-align: center; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface-alt); }
+
+    td {
+      padding: 13px 18px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    td:not(:first-child) { text-align: center; }
+
+    .rate-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 8px;
+      padding: 4px 12px;
+      min-width: 52px;
+    }
+
+    .rate-high   { background: rgba(11,192,141,0.15); color: var(--success); }
+    .rate-mid    { background: rgba(30,106,255,0.12); color: var(--accent); }
+    .rate-low    { background: rgba(245,166,35,0.15); color: var(--warning); }
+    .rate-xhigh  { background: rgba(11,192,141,0.25); color: var(--success); font-size: 14px; }
+
+    .region-flag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .region-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-a { background: #0BC08D; }
+    .dot-b { background: #1E6AFF; }
+    .dot-c { background: #F59E0B; }
+    .dot-d { background: #EF4444; }
+
+    .special-row td { background: rgba(239,68,68,0.04); }
+    [data-theme="dark"] .special-row td { background: rgba(239,68,68,0.08); }
+
+    .special-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--danger);
+      background: rgba(239,68,68,0.12);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-left: 6px;
+    }
+
+    .table-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-alt);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ===== TIMELINE (SCADENZE) ===== */
+    .timeline-section { margin-bottom: 56px; }
+
+    .timeline {
+      position: relative;
+      padding-left: 0;
+    }
+
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .timeline-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+
+    .timeline-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent);
+    }
+
+    .timeline-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .timeline-card.phase-1::before { background: var(--success); }
+    .timeline-card.phase-2::before { background: var(--accent); }
+    .timeline-card.phase-3::before { background: var(--warning); }
+    .timeline-card.phase-4::before { background: var(--danger); }
+    .timeline-card.phase-done::before { background: var(--text-muted); }
+
+    .tc-phase {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .phase-1 .tc-phase { color: var(--success); }
+    .phase-2 .tc-phase { color: var(--accent); }
+    .phase-3 .tc-phase { color: var(--warning); }
+    .phase-4 .tc-phase { color: var(--danger); }
+    .phase-done .tc-phase { color: var(--text-muted); }
+
+    .tc-date {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .tc-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .tc-urgent {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      background: rgba(245,158,11,0.15);
+      color: var(--warning);
+    }
+
+    .tc-active {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 100px;
+      background: rgba(11,192,141,0.15);
+      color: var(--success);
+    }
+
+    /* ===== INFO CARDS ===== */
+    .info-section { margin-bottom: 56px; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
+    }
+
+    .info-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .info-card-icon {
+      width: 42px; height: 42px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .icon-blue { background: rgba(30,106,255,0.12); }
+    .icon-green { background: rgba(11,192,141,0.12); }
+    .icon-amber { background: rgba(245,158,11,0.12); }
+    .icon-red { background: rgba(239,68,68,0.12); }
+
+    .info-card h3 {
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .info-list li::before {
+      content: '›';
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+      line-height: 1.2;
+    }
+
+    .info-list li.excluded::before { color: var(--danger); content: '✕'; font-size: 11px; margin-top: 2px; }
+    .info-list li.ok::before { color: var(--success); content: '✓'; font-size: 11px; margin-top: 2px; }
+
+    /* ===== BUDGET SECTION ===== */
+    .budget-section { margin-bottom: 56px; }
+
+    .budget-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .budget-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
+    }
+
+    .budget-card:hover { box-shadow: var(--shadow-md); }
+
+    .budget-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .budget-card.y26::after { background: var(--success); }
+    .budget-card.y27::after { background: var(--accent); }
+    .budget-card.y28::after { background: var(--warning); }
+
+    .budget-year {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .budget-amount {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .budget-sub { font-size: 12px; color: var(--text-muted); }
+
+    .budget-bar-track {
+      margin-top: 16px;
+      height: 6px;
+      background: var(--surface-alt);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .budget-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 1s ease;
+    }
+
+    .y26 .budget-bar-fill { background: var(--success); width: 100%; }
+    .y27 .budget-bar-fill { background: var(--accent); width: 43%; }
+    .y28 .budget-bar-fill { background: var(--warning); width: 33%; }
+
+    /* ===== DISCLAIMER / FOOTER ===== */
+    .disclaimer {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 40px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .disclaimer-icon { font-size: 22px; flex-shrink: 0; margin-top: -2px; }
+
+    .disclaimer-text {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .disclaimer-text strong { color: var(--text); }
+
+    footer {
+      background: var(--primary);
+      color: rgba(255,255,255,0.75);
+      padding: 40px 0;
+    }
+
+    [data-theme="dark"] footer {
+      background: #050B18;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo { display: flex; align-items: center; gap: 10px; }
+
+    .footer-logo-name {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-logo-tag {
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12.5px;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover { color: #FFFFFF; }
+
+    .footer-right {
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .footer-right p { margin-bottom: 2px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .simulator-grid { grid-template-columns: 1fr; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-stat-box { flex-direction: row; }
+      .stat-card { min-width: 120px; flex: 1; }
+      .budget-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .tabs { flex-wrap: wrap; }
+      .hero-pills { gap: 8px; }
+      .hero-stat-box { flex-direction: column; }
+      .nav-badge { display: none; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-right { text-align: left; }
+    }
+
+    /* ===== ANIMATION ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in { animation: fadeInUp 0.5s ease forwards; }
+
+    .sim-panel, .timeline-card, .info-card, .budget-card {
+      animation: fadeInUp 0.4s ease both;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="container">
+    <nav class="nav-inner">
+      <a href="#" class="logo" aria-label="Ingenia - Home">
+        <!-- SVG Logo Ingenia -->
+        <svg class="logo-icon" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="42" height="42" rx="10" fill="#0C1F5B"/>
+          <path d="M8 21 L18 11 L28 21 L18 31 Z" fill="none" stroke="#1E6AFF" stroke-width="2.2"/>
+          <path d="M15 21 L21 15 L27 21 L21 27 Z" fill="#1E6AFF" opacity="0.8"/>
+          <circle cx="21" cy="21" r="3" fill="#00C4FF"/>
+          <line x1="28" y1="14" x2="34" y2="14" stroke="#1E6AFF" stroke-width="2" stroke-linecap="round"/>
+          <line x1="28" y1="21" x2="36" y2="21" stroke="#1E6AFF" stroke-width="2" stroke-linecap="round"/>
+          <line x1="28" y1="28" x2="34" y2="28" stroke="#1E6AFF" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <div class="logo-text-block">
+          <span class="logo-name">INGENIA</span>
+          <span class="logo-tag">Powering Future</span>
+        </div>
+      </a>
+
+      <div class="nav-badge">
+        <span class="dot"></span>
+        Cruscotto ZES Unica 2026–2028
+      </div>
+
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambia tema">
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          <span class="toggle-icon" id="toggle-icon">🌙</span>
+          <span id="toggle-label">Dark</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+          Finanza Agevolata · Legge di Bilancio 2026
+        </div>
+        <h1>
+          Credito d'imposta<br>
+          <span>ZES Unica</span> 2026–2028
+        </h1>
+        <p class="hero-desc">
+          Zona Economica Speciale per il Mezzogiorno. Calcola il credito d'imposta per i tuoi investimenti in beni strumentali nuovi nelle regioni del Sud Italia, Abruzzo, Marche e Umbria.
+        </p>
+        <div class="hero-pills">
+          <div class="hero-pill"><span class="pill-icon">🏭</span> Beni strumentali nuovi</div>
+          <div class="hero-pill"><span class="pill-icon">📍</span> 10 Regioni ammissibili</div>
+          <div class="hero-pill"><span class="pill-icon">📅</span> Investimenti gen–dic 2026</div>
+          <div class="hero-pill"><span class="pill-icon">⚖️</span> Art. 16 D.L. 124/2023</div>
+        </div>
+      </div>
+      <div class="hero-stat-box">
+        <div class="stat-card accent-card">
+          <div class="stat-val">2,3 <span>Mld €</span></div>
+          <div class="stat-label">Budget 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">70<span>%</span></div>
+          <div class="stat-label">Aliquota massima</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">100 <span>M€</span></div>
+          <div class="stat-label">Tetto per progetto</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MAIN ===== -->
+<main>
+  <div class="container">
+
+    <!-- SIMULATOR -->
+    <section class="simulator-section">
+      <div class="section-label">Simulatore</div>
+      <h2>Calcola il tuo beneficio</h2>
+      <p class="section-sub">Seleziona la regione, la dimensione dell'impresa e l'importo dell'investimento per ottenere una stima del credito d'imposta teorico.</p>
+
+      <div class="simulator-grid">
+
+        <!-- INPUT PANEL -->
+        <div class="sim-panel">
+          <div class="sim-panel-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Parametri Investimento
+          </div>
+
+          <div class="form-group">
+            <label for="sel-regione">Regione</label>
+            <select id="sel-regione" onchange="calcola()">
+              <option value="">— Seleziona regione —</option>
+              <optgroup label="Zone art. 107.3.a – Aliquote alte">
+                <option value="A1">Calabria</option>
+                <option value="A1">Campania</option>
+                <option value="A1">Puglia (escluso Taranto)</option>
+                <option value="A1">Sicilia</option>
+                <option value="A2">Basilicata</option>
+                <option value="A2">Molise</option>
+                <option value="A2">Sardegna (escluso Sulcis)</option>
+              </optgroup>
+              <optgroup label="Zone art. 107.3.c – Aliquote medie">
+                <option value="C1">Abruzzo</option>
+                <option value="C1">Marche</option>
+                <option value="C1">Umbria</option>
+                <option value="C1">ZES Sisma Centro Italia</option>
+              </optgroup>
+              <optgroup label="Zone speciali Just Transition Fund">
+                <option value="JTF">Taranto (Puglia – JTF)</option>
+                <option value="JTF">Sulcis (Sardegna – JTF)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sel-dimensione">Dimensione impresa</label>
+            <select id="sel-dimensione" onchange="calcola()">
+              <option value="">— Seleziona dimensione —</option>
+              <option value="PI">Piccola impresa (&lt;50 dip. / &lt;10M€ fatturato)</option>
+              <option value="PM">Media impresa (&lt;250 dip. / &lt;50M€ fatturato)</option>
+              <option value="GI">Grande impresa (≥250 dip. o ≥50M€ fatturato)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inp-investimento">Importo investimento agevolabile</label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">€</span>
+              <input type="number" id="inp-investimento" placeholder="Es. 500.000" min="200000" max="100000000" step="1000" oninput="calcola()" />
+            </div>
+            <div class="range-note">Minimo: €200.000 · Massimo: €100.000.000 per progetto</div>
+          </div>
+
+          <div class="form-group">
+            <label for="sel-anno">Anno di riferimento</label>
+            <select id="sel-anno" onchange="calcola()">
+              <option value="2026">2026 – Budget €2,3 miliardi</option>
+              <option value="2027">2027 – Budget €1 miliardo</option>
+              <option value="2028">2028 – Budget €750 milioni</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sel-riparto">Percentuale di riparto attesa</label>
+            <select id="sel-riparto" onchange="calcola()">
+              <option value="100">100% – Ottimistico (budget sufficiente)</option>
+              <option value="60.38" selected>60,38% – Stima prudente (come 2025)</option>
+              <option value="75">75% – Scenario intermedio</option>
+              <option value="50">50% – Scenario pessimistico</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- RESULT PANEL -->
+        <div class="result-panel" id="result-panel">
+          <div class="result-panel-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            Stima Credito d'Imposta
+          </div>
+
+          <div id="result-empty" class="result-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" display="block" style="margin:0 auto 12px"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Compila i campi a sinistra<br>per calcolare il beneficio
+          </div>
+
+          <div id="result-content" style="display:none;">
+            <div class="result-main">
+              <div class="result-label-sm">Credito d'imposta stimato (netto riparto)</div>
+              <div class="result-amount" id="res-netto">
+                <span class="result-euro">€</span>
+                <span id="res-netto-val">0</span>
+              </div>
+              <div class="result-sub-amount" id="res-netto-note"></div>
+            </div>
+
+            <div class="progress-label">
+              <span>€0</span>
+              <span id="res-progress-label">Aliquota effettiva stimata</span>
+              <span id="res-eff-perc">0%</span>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-bar" id="res-progress" style="width:0%"></div>
+            </div>
+
+            <div class="result-rows">
+              <div class="result-row">
+                <span class="result-row-label">Aliquota teorica massima</span>
+                <span class="result-row-val highlight" id="res-aliquota">–</span>
+              </div>
+              <div class="result-row">
+                <span class="result-row-label">Credito teorico lordo</span>
+                <span class="result-row-val" id="res-lordo">–</span>
+              </div>
+              <div class="result-row">
+                <span class="result-row-label">% riparto applicata</span>
+                <span class="result-row-val warning" id="res-riparto">–</span>
+              </div>
+              <div class="result-row">
+                <span class="result-row-label">Investimento ammissibile</span>
+                <span class="result-row-val success" id="res-investimento">–</span>
+              </div>
+              <div class="result-row">
+                <span class="result-row-label">Anno di riferimento</span>
+                <span class="result-row-val" id="res-anno">–</span>
+              </div>
+            </div>
+
+            <div class="result-note">
+              ⚠️ <strong>Stima indicativa.</strong> Il credito effettivo dipende dalla % di riparto pubblicata dall'Agenzia delle Entrate dopo il 30 maggio. Dati 2025: riparto al 60,3811%. Consultare un professionista abilitato.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SCADENZE OPERATIVE -->
+    <section class="timeline-section">
+      <div class="section-label">Scadenze operative</div>
+      <h2>Calendario 2026</h2>
+      <p class="section-sub">Le date chiave per non perdere l'agevolazione. Attenzione: la mancata presentazione nei termini comporta la decadenza dal beneficio.</p>
+
+      <div class="timeline-grid">
+        <div class="timeline-card phase-done">
+          <div class="tc-phase">✓ Completato</div>
+          <div class="tc-date">30 gennaio 2026</div>
+          <div class="tc-desc">Provvedimento AdE n. 3882/2026: approvazione dei modelli di comunicazione e comunicazione integrativa con istruzioni e modalità di trasmissione telematica.</div>
+        </div>
+
+        <div class="timeline-card phase-1">
+          <div class="tc-phase">Fase 1 — Apertura sportello</div>
+          <div class="tc-date">31 marzo – 30 maggio 2026</div>
+          <div class="tc-desc">Comunicazione preliminare all'Agenzia delle Entrate: importo delle spese sostenute dal 1° gennaio 2026 e previste fino al 31 dicembre 2026.</div>
+          <span class="tc-active">⚡ In corso ora</span>
+        </div>
+
+        <div class="timeline-card phase-2">
+          <div class="tc-phase">Fase 2 — Riparto</div>
+          <div class="tc-date">Entro 10 giorni dal 30 maggio</div>
+          <div class="tc-desc">L'Agenzia delle Entrate pubblica la percentuale di riparto (eventuale) qualora le richieste superino il plafond disponibile di €2,3 miliardi.</div>
+        </div>
+
+        <div class="timeline-card phase-2">
+          <div class="tc-phase">Bonus extra 2026</div>
+          <div class="tc-date">15 aprile – 15 maggio 2026</div>
+          <div class="tc-desc">Comunicazione separata per il bonus aggiuntivo +14,6189% (per chi ha presentato comunicazione integrativa 2025 e NON ha fruito del credito Transizione 5.0).</div>
+          <span class="tc-urgent">📋 Verifica idoneità</span>
+        </div>
+
+        <div class="timeline-card phase-3">
+          <div class="tc-phase">Fase 3 — Completamento</div>
+          <div class="tc-date">31 dicembre 2026</div>
+          <div class="tc-desc">Termine ultimo per la realizzazione degli investimenti indicati nella comunicazione preliminare. Gli investimenti non completati comportano decadenza parziale.</div>
+        </div>
+
+        <div class="timeline-card phase-4">
+          <div class="tc-phase">Fase 4 — Consuntivo</div>
+          <div class="tc-date">3 – 17 gennaio 2027</div>
+          <div class="tc-desc">Comunicazione integrativa: attestazione dell'avvenuta realizzazione degli investimenti entro il 31/12/2026. Obbligatoria a pena di decadenza dal beneficio.</div>
+          <span class="tc-urgent">⚠️ Termine perentorio</span>
+        </div>
+
+        <div class="timeline-card phase-2">
+          <div class="tc-phase">Utilizzo in compensazione</div>
+          <div class="tc-date">Dal giorno lavorativo dopo il riconoscimento</div>
+          <div class="tc-desc">Utilizzo del credito in compensazione tramite modello F24 (codice tributo 7034) esclusivamente tramite servizi telematici dell'Agenzia delle Entrate.</div>
+        </div>
+
+        <div class="timeline-card phase-1">
+          <div class="tc-phase">Certificazione obbligatoria</div>
+          <div class="tc-date">Prima dell'utilizzo del credito</div>
+          <div class="tc-desc">L'effettivo sostenimento delle spese deve essere certificato da un revisore legale o da una società di revisione iscritta nel registro. Obbligatoria per spese non documentabili con fattura elettronica o in leasing.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALIQUOTE -->
+    <section class="aliquote-section">
+      <div class="section-label">Aliquote</div>
+      <h2>Intensità massime d'aiuto per regione</h2>
+      <p class="section-sub">Le percentuali teoriche massime previste dalla Carta degli Aiuti di Stato a finalità regionale 2022–2027. Il credito effettivo dipende dal riparto.</p>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-aliquote', this)">Tutte le regioni</button>
+        <button class="tab-btn" onclick="switchTab('tab-speciali', this)">Zone speciali</button>
+        <button class="tab-btn" onclick="switchTab('tab-note', this)">Requisiti e limiti</button>
+      </div>
+
+      <!-- TAB 1: Tutte le regioni -->
+      <div class="tab-panel active" id="tab-aliquote">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Regione / Area</th>
+                <th>Art. TFUE</th>
+                <th>Piccola impresa</th>
+                <th>Media impresa</th>
+                <th>Grande impresa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-a"></span>Calabria</div></td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+                <td><span class="rate-badge rate-low">40%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-a"></span>Campania</div></td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+                <td><span class="rate-badge rate-low">40%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-a"></span>Puglia (escluso Taranto)</div></td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+                <td><span class="rate-badge rate-low">40%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-a"></span>Sicilia</div></td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+                <td><span class="rate-badge rate-low">40%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-b"></span>Basilicata</div></td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-high">50%</span></td>
+                <td><span class="rate-badge rate-mid">40%</span></td>
+                <td><span class="rate-badge rate-low">30%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-b"></span>Molise</div></td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-high">50%</span></td>
+                <td><span class="rate-badge rate-mid">40%</span></td>
+                <td><span class="rate-badge rate-low">30%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-b"></span>Sardegna (escluso Sulcis)</div></td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-high">50%</span></td>
+                <td><span class="rate-badge rate-mid">40%</span></td>
+                <td><span class="rate-badge rate-low">30%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-c"></span>Abruzzo</div></td>
+                <td>107.3.c</td>
+                <td><span class="rate-badge rate-low">35%</span></td>
+                <td><span class="rate-badge rate-low">25%</span></td>
+                <td><span class="rate-badge rate-low">15%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-c"></span>Marche</div></td>
+                <td>107.3.c</td>
+                <td><span class="rate-badge rate-low">35%</span></td>
+                <td><span class="rate-badge rate-low">25%</span></td>
+                <td><span class="rate-badge rate-low">15%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-c"></span>Umbria</div></td>
+                <td>107.3.c</td>
+                <td><span class="rate-badge rate-low">35%</span></td>
+                <td><span class="rate-badge rate-low">25%</span></td>
+                <td><span class="rate-badge rate-low">15%</span></td>
+              </tr>
+              <tr>
+                <td><div class="region-flag"><span class="region-dot dot-c"></span>ZES Sisma Centro Italia</div></td>
+                <td>107.3.c</td>
+                <td><span class="rate-badge rate-low">35%</span></td>
+                <td><span class="rate-badge rate-low">25%</span></td>
+                <td><span class="rate-badge rate-low">15%</span></td>
+              </tr>
+              <tr class="special-row">
+                <td>
+                  <div class="region-flag">
+                    <span class="region-dot dot-d"></span>
+                    Taranto <span class="special-badge">JTF +10%</span>
+                  </div>
+                </td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-xhigh">70%</span></td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+              </tr>
+              <tr class="special-row">
+                <td>
+                  <div class="region-flag">
+                    <span class="region-dot dot-d"></span>
+                    Sulcis (Sardegna) <span class="special-badge">JTF +10%</span>
+                  </div>
+                </td>
+                <td>107.3.a</td>
+                <td><span class="rate-badge rate-xhigh">70%</span></td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-legend">
+            <div class="legend-item"><span class="region-dot dot-a" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span> Art. 107.3.a – Aliquote standard alte</div>
+            <div class="legend-item"><span class="region-dot dot-b" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span> Art. 107.3.a – Aliquote medie</div>
+            <div class="legend-item"><span class="region-dot dot-c" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span> Art. 107.3.c – Aliquote ridotte</div>
+            <div class="legend-item"><span class="region-dot dot-d" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span> Zone JTF – Maggiorazione +10%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Zone speciali -->
+      <div class="tab-panel" id="tab-speciali">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Zona speciale</th>
+                <th>Tipo</th>
+                <th>Beneficio aggiuntivo</th>
+                <th>Piccola</th>
+                <th>Media</th>
+                <th>Grande</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="special-row">
+                <td><strong>Taranto</strong></td>
+                <td>Just Transition Fund</td>
+                <td>+10% su aliquote standard</td>
+                <td><span class="rate-badge rate-xhigh">70%</span></td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+              </tr>
+              <tr class="special-row">
+                <td><strong>Sulcis</strong></td>
+                <td>Just Transition Fund</td>
+                <td>+10% su aliquote standard</td>
+                <td><span class="rate-badge rate-xhigh">70%</span></td>
+                <td><span class="rate-badge rate-high">60%</span></td>
+                <td><span class="rate-badge rate-mid">50%</span></td>
+              </tr>
+              <tr>
+                <td><strong>ZES Sisma</strong></td>
+                <td>Zone sismiche Centro Italia</td>
+                <td>Stesse aliquote art. 107.3.c</td>
+                <td><span class="rate-badge rate-low">35%</span></td>
+                <td><span class="rate-badge rate-low">25%</span></td>
+                <td><span class="rate-badge rate-low">15%</span></td>
+              </tr>
+              <tr>
+                <td><strong>Bonus extra 2026</strong></td>
+                <td>Integrazione ZES 2025</td>
+                <td>+14,6189% (se non fruito T5.0)</td>
+                <td colspan="3" style="text-align:center;"><span class="rate-badge rate-mid">+14,62%</span> aggiuntivo al credito già riconosciuto</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: Note -->
+      <div class="tab-panel" id="tab-note">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Parametro</th>
+                <th>Valore / Condizione</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Investimento minimo</td><td><strong>€200.000</strong></td></tr>
+              <tr><td>Investimento massimo per progetto</td><td><strong>€100.000.000</strong></td></tr>
+              <tr><td>Beni immobili (limite)</td><td>Max <strong>50%</strong> del valore complessivo investimento</td></tr>
+              <tr><td>Mantenimento attività post-investimento</td><td>Almeno <strong>5 anni</strong> nella ZES Unica</td></tr>
+              <tr><td>Cumulabilità</td><td>Cumulabile con bonus assunzioni ZES; escluso cumulo con T5.0 per medesimi investimenti</td></tr>
+              <tr><td>Utilizzo credito</td><td>F24 in compensazione (codice tributo 7034), esclusivamente canale telematico AdE</td></tr>
+              <tr><td>Grandi progetti (&gt;50M€)</td><td>Regole dell'"importo di aiuto corretto" obbligatorie per tutte le imprese</td></tr>
+              <tr><td>Certificazione contabile</td><td>Obbligatoria (revisore legale o società di revisione iscritta)</td></tr>
+              <tr><td>Comunicazione tramite</td><td>Canale telematico Agenzia Entrate (modelli prov. 3882/2026)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUDGET ANNUALE -->
+    <section class="budget-section">
+      <div class="section-label">Dotazione finanziaria</div>
+      <h2>Budget ZES Unica 2026–2028</h2>
+      <p class="section-sub">Le risorse disponibili per ciascun anno del triennio di proroga. Il riparto è proporzionale alle comunicazioni preliminari ricevute.</p>
+
+      <div class="budget-grid">
+        <div class="budget-card y26">
+          <div class="budget-year">Anno 2026</div>
+          <div class="budget-amount">2,3 Mld</div>
+          <div class="budget-sub">€2.300.000.000</div>
+          <div class="budget-bar-track"><div class="budget-bar-fill"></div></div>
+        </div>
+        <div class="budget-card y27">
+          <div class="budget-year">Anno 2027</div>
+          <div class="budget-amount">1,0 Mld</div>
+          <div class="budget-sub">€1.000.000.000</div>
+          <div class="budget-bar-track"><div class="budget-bar-fill"></div></div>
+        </div>
+        <div class="budget-card y28">
+          <div class="budget-year">Anno 2028</div>
+          <div class="budget-amount">750 Mln</div>
+          <div class="budget-sub">€750.000.000</div>
+          <div class="budget-bar-track"><div class="budget-bar-fill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFO CARDS -->
+    <section class="info-section">
+      <div class="section-label">Guida rapida</div>
+      <h2>Requisiti e spese ammissibili</h2>
+      <p class="section-sub">Riepilogo operativo per verificare rapidamente l'accesso all'agevolazione.</p>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-icon icon-green">✅</div>
+          <h3>Spese ammissibili</h3>
+          <ul class="info-list">
+            <li class="ok">Macchinari, impianti e attrezzature nuovi di fabbrica</li>
+            <li class="ok">Beni immateriali strumentali all'attività</li>
+            <li class="ok">Terreni e immobili strumentali (max 50% del totale)</li>
+            <li class="ok">Beni in locazione finanziaria (leasing)</li>
+            <li class="ok">Investimenti per transizione digitale ed ecologica</li>
+            <li class="ok">Beni immobili già usati da terzi per attività economica</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon icon-red">❌</div>
+          <h3>Esclusi e non ammissibili</h3>
+          <ul class="info-list">
+            <li class="excluded">Imprese in liquidazione, scioglimento o in difficoltà</li>
+            <li class="excluded">Settore siderurgico, carbonifero e lignite</li>
+            <li class="excluded">Produzione, distribuzione e trasmissione di energia</li>
+            <li class="excluded">Trasporti (esclusi magazzinaggio e servizi di supporto)</li>
+            <li class="excluded">Produzione primaria di prodotti agricoli e pesca</li>
+            <li class="excluded">Beni usati non nuovi di fabbrica</li>
+            <li class="excluded">Beni non strumentali all'attività produttiva</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon icon-blue">📋</div>
+          <h3>Chi può accedere</h3>
+          <ul class="info-list">
+            <li>Tutte le imprese, indipendentemente dalla forma giuridica</li>
+            <li>Qualsiasi regime contabile adottato (ordinario, semplificato)</li>
+            <li>Imprese già operative nella ZES o che si insediano</li>
+            <li>Imprese agricole e forestali (aliquote speciali 16-bis)</li>
+            <li>Il progetto deve configurarsi come "investimento iniziale" (art. 2 Reg. UE 651/2014)</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <div class="info-card-icon icon-amber">⚡</div>
+          <h3>Adempimenti chiave</h3>
+          <ul class="info-list">
+            <li>Comunicazione preliminare: <strong>31 mar – 30 mag 2026</strong></li>
+            <li>Comunicazione integrativa: <strong>3–17 gen 2027</strong></li>
+            <li>Certificazione contabile da revisore legale prima dell'utilizzo</li>
+            <li>F24 esclusivamente via canali telematici AdE</li>
+            <li>Mantenere l'attività nella ZES per almeno 5 anni post-investimento</li>
+            <li>Verifica cumulo con Transizione 5.0 sugli stessi beni</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer">
+      <span class="disclaimer-icon">ℹ️</span>
+      <div class="disclaimer-text">
+        <strong>Nota informativa:</strong> Il presente cruscotto ha finalità puramente informative e divulgative. Le simulazioni sono indicative e non costituiscono consulenza fiscale o legale. Le aliquote effettive sono soggette a riparto da parte dell'Agenzia delle Entrate e possono differire da quelle teoriche. Per ogni decisione di investimento è necessario avvalersi di un professionista abilitato. Dati aggiornati al marzo 2026. Rif. normativi: Art. 16 D.L. 124/2023 – L. 162/2023 – L. 199/2025 (Legge di Bilancio 2026) – Prov. AdE 3882/30.01.2026.
+      </div>
+    </div>
+
+  </div><!-- /container -->
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">
+          <svg width="34" height="34" viewBox="0 0 42 42" fill="none">
+            <rect width="42" height="42" rx="10" fill="rgba(255,255,255,0.1)"/>
+            <path d="M8 21 L18 11 L28 21 L18 31 Z" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
+            <path d="M15 21 L21 15 L27 21 L21 27 Z" fill="rgba(255,255,255,0.4)"/>
+            <circle cx="21" cy="21" r="3" fill="#60A5FA"/>
+          </svg>
+          <div>
+            <div class="footer-logo-name">INGENIA</div>
+            <div class="footer-logo-tag">Powering Future</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <strong style="color:rgba(255,255,255,0.9);font-size:12px;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">Contatti</strong>
+        <a href="mailto:info@ingenia.cloud">info@ingenia.cloud</a>
+        <a href="https://ingenia.cloud" target="_blank">ingenia.cloud</a>
+        <span>Via Vasto 29, Avellino (AV)</span>
+      </div>
+
+      <div class="footer-right">
+        <p style="color:rgba(255,255,255,0.5);font-size:11px;">© 2026 Ingenia S.R.L. – Tutti i diritti riservati</p>
+        <p style="color:rgba(255,255,255,0.35);font-size:10.5px;margin-top:4px;">Cruscotto ZES Unica 2026–2028 · v1.0</p>
+        <p style="color:rgba(255,255,255,0.3);font-size:10px;margin-top:4px;">PMI Innovativa · ISO 9001 · ISO 27001</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+  // ===== ALIQUOTE DATA =====
+  const aliquote = {
+    A1:  { PI: 60, PM: 50, GI: 40 },
+    A2:  { PI: 50, PM: 40, GI: 30 },
+    C1:  { PI: 35, PM: 25, GI: 15 },
+    JTF: { PI: 70, PM: 60, GI: 50 },
+  };
+
+  // ===== FORMATTER =====
+  const fmtEur = (n) =>
+    new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+
+  const fmtNum = (n) =>
+    new Intl.NumberFormat('it-IT', { maximumFractionDigits: 0 }).format(n);
+
+  // ===== THEME TOGGLE =====
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('toggle-icon').textContent = isDark ? '🌙' : '☀️';
+    document.getElementById('toggle-label').textContent = isDark ? 'Dark' : 'Light';
+    localStorage.setItem('zes-theme', isDark ? 'light' : 'dark');
+  }
+
+  // Restore theme from storage
+  (function () {
+    const saved = localStorage.getItem('zes-theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+      if (saved === 'dark') {
+        document.getElementById('toggle-icon').textContent = '☀️';
+        document.getElementById('toggle-label').textContent = 'Light';
+      }
+    }
+  })();
+
+  // ===== TABS =====
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ===== CALCULATOR =====
+  function calcola() {
+    const regione   = document.getElementById('sel-regione').value;
+    const dimensione = document.getElementById('sel-dimensione').value;
+    const importo   = parseFloat(document.getElementById('inp-investimento').value) || 0;
+    const anno      = document.getElementById('sel-anno').value;
+    const riparto   = parseFloat(document.getElementById('sel-riparto').value) / 100;
+
+    const empty   = document.getElementById('result-empty');
+    const content = document.getElementById('result-content');
+
+    if (!regione || !dimensione || importo < 200000) {
+      empty.style.display = 'block';
+      content.style.display = 'none';
+      if (importo > 0 && importo < 200000) {
+        empty.innerHTML = `<div style="color:rgba(255,100,100,0.7);font-size:14px;">⚠️ L'investimento minimo ammissibile è <strong style="color:rgba(255,120,120,0.9)">€200.000</strong></div>`;
+      } else {
+        empty.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:block;margin:0 auto 12px;width:40px;height:40px;opacity:0.3"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>Compila i campi a sinistra<br>per calcolare il beneficio`;
+      }
+      return;
+    }
+
+    // Cap at 100M
+    const invCapped = Math.min(importo, 100_000_000);
+    const data = aliquote[regione];
+    const percTeor = data[dimensione];
+    const lordo  = invCapped * percTeor / 100;
+    const netto  = lordo * riparto;
+    const percEff = percTeor * riparto;
+
+    // Animate
+    const amountEl = document.getElementById('res-netto');
+    amountEl.classList.add('updating');
+    setTimeout(() => {
+      document.getElementById('res-netto-val').textContent = fmtNum(Math.round(netto));
+      document.getElementById('res-netto-note').textContent =
+        `Credito lordo teorico: ${fmtEur(lordo)}`;
+      document.getElementById('res-aliquota').textContent  = percTeor + '%';
+      document.getElementById('res-lordo').textContent     = fmtEur(lordo);
+      document.getElementById('res-riparto').textContent   = (riparto * 100).toFixed(2) + '%';
+      document.getElementById('res-investimento').textContent = fmtEur(invCapped) + (importo > 100_000_000 ? ' (max)' : '');
+      document.getElementById('res-anno').textContent     = anno;
+      document.getElementById('res-eff-perc').textContent = percEff.toFixed(2) + '%';
+      document.getElementById('res-progress').style.width = Math.min(percEff, 70) / 70 * 100 + '%';
+      amountEl.classList.remove('updating');
+    }, 150);
+
+    empty.style.display = 'none';
+    content.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
