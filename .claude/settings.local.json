@@ -10,7 +10,12 @@
       "Read(//c/Users/massa/AppData/Local/Temp/**)",
       "Bash(python3)",
       "Bash(python3 merge_script.py)",
-      "Bash(python merge_script.py)"
+      "Bash(python merge_script.py)",
+      "Bash(npm install:*)",
+      "Bash(node -e ':*)",
+      "Bash(rm -f generate-og.html og-image.svg)",
+      "Bash(rm -rf node_modules package-lock.json)",
+      "Bash(ls -la *.png *.html)"
     ],
     "additionalDirectories": [
       "\\tmp",
