@@ -266,6 +266,7 @@
     <div style="display:flex;align-items:center;gap:16px;">
         <span id="headerAziendaLabel" style="font-weight:600;font-size:0.95rem;opacity:0.9;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
         <div class="badge" style="background:var(--accent);color:#ffffff;">v2.4 &mdash; Marzo 2026</div>
+        <button class="btn-print" onclick="resetAll()" title="Resetta tutti i cruscotti">&#128260; Reset Tutto</button>
         <button class="btn-print" onclick="stampaReport()" title="Stampa report completo">&#128424; Stampa Report</button>
     </div>
 </div>
@@ -389,6 +390,9 @@
             </div>
 
         </div>
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="resetForm('anagrafica')">Reset Anagrafica</button>
+        </div>
     </div>
 </div>
 
@@ -405,6 +409,7 @@
         <input type="hidden" id="importo_investimento">
         <div class="btn-group">
             <button class="btn btn-primary" onclick="verificaAmmissibilita()">Verifica Ammissibilit&agrave;</button>
+            <button class="btn btn-secondary" onclick="resetForm('calcolo')">Reset Calcolo ZES</button>
         </div>
         <div id="risultato_ammissibilita" style="margin-top:16px;"></div>
     </div>
@@ -503,6 +508,7 @@
         <div id="anagraficaSummaryCumulo" class="info-banner" style="margin-bottom:16px;"></div>
         <div class="btn-group">
             <button class="btn btn-primary" onclick="calcolaCumulo()">Calcola Cumulo su tutti i Beni</button>
+            <button class="btn btn-secondary" onclick="resetForm('cumulo')">Reset Cumulo</button>
         </div>
         <div id="risultato_cumulo" style="margin-top:20px;"></div>
     </div>
@@ -1104,26 +1110,53 @@ function syncImportoAmmissibilita(totale) {
 }
 
 function resetForm(section) {
+    if (section === 'anagrafica') {
+        const container = document.getElementById(section);
+        container.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+        container.querySelectorAll('input[type=number]').forEach(i => { if (i.id === 'gen_aliquota') i.value = '24'; else if(i.placeholder === '0') i.value = '0'; else i.value = ''; });
+        container.querySelectorAll('input[type=text]').forEach(i => i.value = '');
+        container.querySelectorAll('input[type=hidden]').forEach(i => i.value = '');
+        container.querySelectorAll('.toggle-btn').forEach(b => b.className = 'toggle-btn');
+        document.getElementById('headerAziendaLabel').textContent = '';
+        updateAnagraficaBanners();
+        return;
+    }
     if (section === 'calcolo') {
         // Reset asset table
         document.getElementById('assetTableBody').innerHTML = '';
         assetRowCounter = 0;
+        for(let i=0;i<3;i++) addAssetRow();
         updateAssetTotals();
         // Reset other fields in calcolo
         const container = document.getElementById(section);
-        container.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+        container.querySelectorAll('.form-grid select').forEach(s => s.selectedIndex = 0);
         container.querySelectorAll('.form-grid input[type=number]').forEach(i => { if(i.placeholder === '0') i.value = '0'; else i.value = ''; });
-        const res = container.querySelector('[id^="risultato"]');
-        if (res) res.innerHTML = '';
+        container.querySelectorAll('[id^="risultato"]').forEach(r => r.innerHTML = '');
+        document.getElementById('fabbricatiAlert').style.display = 'none';
         syncImportoAmmissibilita(0);
         return;
     }
+    if (section === 'cumulo') {
+        const container = document.getElementById(section);
+        container.querySelectorAll('[id^="risultato"]').forEach(r => r.innerHTML = '');
+        window._risultatoZES = null;
+        syncCumuloBeni();
+        return;
+    }
+    // Generic fallback
     const container = document.getElementById(section);
     container.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
     container.querySelectorAll('input[type=number]').forEach(i => { if(i.placeholder === '0') i.value = '0'; else i.value = ''; });
     container.querySelectorAll('input[type=text]').forEach(i => i.value = '');
     const res = container.querySelector('[id^="risultato"]');
     if (res) res.innerHTML = '';
+}
+
+function resetAll() {
+    if (!confirm('Vuoi resettare tutti i dati di tutte le schede?')) return;
+    resetForm('anagrafica');
+    resetForm('calcolo');
+    resetForm('cumulo');
 }
 
 // Init: add 3 empty rows on load
