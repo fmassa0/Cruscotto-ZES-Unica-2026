@@ -228,13 +228,107 @@
         .cumulo-beni-row td { vertical-align: middle; padding: 8px 6px; }
         .cumulo-beni-row .agev-cell { max-width: 340px; }
 
+        /* ── TABLET ── */
+        @media (max-width: 900px) {
+            .grid-4 { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* ── SMARTPHONE ── */
         @media (max-width: 768px) {
+            /* Grids → single column */
             .form-grid, .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-            .tabs { padding: 0 12px; }
-            .tab { padding: 12px 14px; font-size: 0.78rem; }
-            .container { padding: 16px; }
+
+            /* Header */
+            .header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+            .header h1 { font-size: 1.1rem; }
+            .header .subtitle { font-size: 0.75rem; }
+            .header .badge { font-size: 0.68rem; padding: 3px 10px; }
+            .header img { height: 44px !important; }
+            .header .btn-print { padding: 6px 10px; font-size: 0.72rem; }
+
+            /* Tabs – scrollable, compact */
+            .tabs { padding: 0 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+            .tabs::-webkit-scrollbar { display: none; }
+            .tab { padding: 10px 12px; font-size: 0.74rem; }
+
+            /* Container & cards */
+            .container { padding: 14px; }
+            .card { padding: 14px; margin-bottom: 14px; border-radius: 10px; }
+            .card h2 { font-size: 1rem; gap: 6px; padding-bottom: 8px; margin-bottom: 12px; }
+            .card h3 { font-size: 0.9rem; margin: 12px 0 8px; }
+
+            /* Form inputs – 16px font prevents iOS auto-zoom */
+            .form-group input, .form-group select { font-size: 16px; padding: 10px 12px; }
+            .form-group label { font-size: 0.76rem; }
+
+            /* Buttons */
+            .btn { padding: 10px 20px; font-size: 0.88rem; }
+            .btn-group { flex-wrap: wrap; gap: 8px; }
+            .btn-group .btn { flex: 1 1 100%; text-align: center; }
+
+            /* Result boxes */
+            .result-box { padding: 14px; border-radius: 10px; }
+            .result-box .big-number { font-size: 1.5rem; }
+            .result-box h3 { font-size: 0.9rem; }
+            .result-box p { font-size: 0.82rem; }
+
+            /* Stat cards */
+            .stat-card { padding: 14px; }
+            .stat-card .stat-value { font-size: 1.4rem; }
+            .stat-card .stat-label { font-size: 0.74rem; }
+
+            /* Info banners */
+            .info-banner { padding: 10px 12px; font-size: 0.82rem; }
+
+            /* Tables (generic) */
+            th, td { padding: 6px 8px; font-size: 0.82rem; }
+
+            /* Asset grid table */
             .asset-grid-table { font-size: 0.78rem; }
-            .asset-grid-table .col-desc { min-width: 150px; }
+            .asset-grid-table .col-desc { min-width: 130px; }
+            .asset-grid-table .col-importo { width: 110px; }
+            .asset-grid-table .col-tipo { width: 120px; }
+            .asset-grid-table .col-cat { width: 140px; }
+            .asset-grid-table .col-iper { width: 160px; }
+            .asset-grid-table input[type="text"],
+            .asset-grid-table input[type="number"],
+            .asset-grid-table select { font-size: 16px; padding: 6px; }
+
+            /* Toggle buttons */
+            .toggle-btn { padding: 7px 8px; font-size: 0.82rem; }
+
+            /* Accordion */
+            .accordion-header { padding: 10px 12px; font-size: 0.85rem; }
+            .accordion-body { padding: 10px 12px; font-size: 0.82rem; }
+
+            /* Checklist */
+            .checklist li { padding: 8px 10px; font-size: 0.84rem; }
+
+            /* Cumulo table */
+            .cumulo-beni-row .agev-cell { max-width: 220px; }
+        }
+
+        /* ── SMALL PHONE (≤480px) ── */
+        @media (max-width: 480px) {
+            .header { padding: 10px 12px; }
+            .header h1 { font-size: 0.95rem; }
+            .header .subtitle { font-size: 0.7rem; }
+            .header img { height: 36px !important; }
+            .header > div { gap: 10px !important; }
+
+            .container { padding: 10px; }
+            .card { padding: 12px; }
+            .card h2 { font-size: 0.92rem; }
+
+            .tab { padding: 8px 10px; font-size: 0.7rem; }
+
+            .btn { padding: 10px 16px; font-size: 0.84rem; }
+
+            .result-box .big-number { font-size: 1.3rem; }
+            .stat-card .stat-value { font-size: 1.2rem; }
+
+            .asset-grid-table .col-desc { min-width: 110px; }
+            .asset-grid-table .col-importo { width: 100px; }
         }
         .btn-print {
             padding: 8px 16px; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px;
@@ -264,7 +358,7 @@
             .accordion-content { display: block !important; max-height: none !important; }
         }
     </style>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 </head>
 <body>
 <div class="print-header" style="display:none;">
@@ -1963,24 +2057,237 @@ function esportaPDF() {
 function esportaExcel() {
     if (typeof XLSX === 'undefined') { alert('Libreria Excel non caricata. Verifica la connessione internet e riprova.'); return; }
 
-    const a = getAnagraficaData();
-    const nomeAzienda = a.nome || 'Azienda non specificata';
-    const dimLabel = {micro:'Micro',piccola:'Piccola',media:'Media',grande:'Grande'}[a.dimensione] || '-';
-    const regLabel = nomiRegioni[a.regione] || '-';
-    const settLabel = a.settore ? document.querySelector('#gen_settore option[value="'+a.settore+'"]').textContent : '-';
-    const tipoLabel = a.tipologia ? document.querySelector('#gen_tipologia_progetto option[value="'+a.tipologia+'"]').textContent : '-';
-    const oggi = new Date();
-    const dataStr = oggi.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+    // ── Helper ──
+    function stCell(v, style) {
+        var cell = { v: v, t: typeof v === 'number' ? 'n' : 's' };
+        cell.s = style || {};
+        return cell;
+    }
 
-    const wb = XLSX.utils.book_new();
+    var thinBorder = {top:{style:"thin",color:{rgb:"D4D8F5"}},bottom:{style:"thin",color:{rgb:"D4D8F5"}},left:{style:"thin",color:{rgb:"D4D8F5"}},right:{style:"thin",color:{rgb:"D4D8F5"}}};
 
-    // ── SHEET 1: ANAGRAFICA ──
-    const anaData = [
-        ['CRUSCOTTO ZES UNICA 2026-2028 — REPORT'],
-        ['Generato il ' + dataStr],
-        [],
-        ['ANAGRAFICA IMPRESA'],
-        ['Campo', 'Valore'],
+    var S = {
+        title: { font:{bold:true,color:{rgb:"FFFFFF"},sz:16,name:"Calibri"}, fill:{fgColor:{rgb:"7B4FD6"}}, alignment:{horizontal:"center",vertical:"center"} },
+        subtitle: { font:{italic:true,color:{rgb:"5E5F85"},sz:10,name:"Calibri"}, alignment:{horizontal:"center"} },
+        sectionHeader: { font:{bold:true,color:{rgb:"FFFFFF"},sz:12,name:"Calibri"}, fill:{fgColor:{rgb:"3A1F8C"}}, alignment:{horizontal:"left",vertical:"center"} },
+        colHeader: { font:{bold:true,color:{rgb:"FFFFFF"},sz:10,name:"Calibri"}, fill:{fgColor:{rgb:"7B4FD6"}}, alignment:{horizontal:"center",vertical:"center",wrapText:true}, border:{top:{style:"thin",color:{rgb:"3A1F8C"}},bottom:{style:"medium",color:{rgb:"3A1F8C"}},left:{style:"thin",color:{rgb:"3A1F8C"}},right:{style:"thin",color:{rgb:"3A1F8C"}}} },
+        colHeaderIper: { font:{bold:true,color:{rgb:"FFFFFF"},sz:10,name:"Calibri"}, fill:{fgColor:{rgb:"2E7D7D"}}, alignment:{horizontal:"center",vertical:"center",wrapText:true}, border:{top:{style:"thin",color:{rgb:"1a5c5c"}},bottom:{style:"medium",color:{rgb:"1a5c5c"}},left:{style:"thin",color:{rgb:"1a5c5c"}},right:{style:"thin",color:{rgb:"1a5c5c"}}} },
+        labelCell: { font:{bold:true,sz:10,name:"Calibri",color:{rgb:"12112E"}}, fill:{fgColor:{rgb:"F5F7FF"}}, border:thinBorder },
+        valueCell: { font:{sz:10,name:"Calibri",color:{rgb:"12112E"}}, alignment:{horizontal:"right"}, border:thinBorder },
+        valueCellCurr: { font:{sz:10,name:"Calibri",color:{rgb:"12112E"}}, alignment:{horizontal:"right"}, border:thinBorder, numFmt:'#,##0.00 \u20ac' },
+        dataEven: { font:{sz:10,name:"Calibri"}, fill:{fgColor:{rgb:"FFFFFF"}}, border:thinBorder },
+        dataOdd: { font:{sz:10,name:"Calibri"}, fill:{fgColor:{rgb:"F5F7FF"}}, border:thinBorder },
+        totalRow: { font:{bold:true,sz:11,name:"Calibri",color:{rgb:"3A1F8C"}}, fill:{fgColor:{rgb:"ECEFFE"}}, border:{top:{style:"double",color:{rgb:"7B4FD6"}},bottom:{style:"medium",color:{rgb:"7B4FD6"}},left:{style:"thin",color:{rgb:"D4D8F5"}},right:{style:"thin",color:{rgb:"D4D8F5"}}} },
+        accentResult: { font:{bold:true,sz:12,name:"Calibri",color:{rgb:"FFFFFF"}}, fill:{fgColor:{rgb:"00CBA8"}}, alignment:{horizontal:"right"}, border:thinBorder },
+        accentHeader: { font:{bold:true,color:{rgb:"FFFFFF"},sz:11,name:"Calibri"}, fill:{fgColor:{rgb:"00CBA8"}}, alignment:{horizontal:"left",vertical:"center"} },
+        barFill: { fill:{fgColor:{rgb:"00CBA8"}} },
+        barEmpty: { fill:{fgColor:{rgb:"ECEFFE"}} },
+        currencyFmt: '#,##0.00 \u20ac',
+        pctFmt: '0.00%'
+    };
+
+    function applyCurrFmt(cell) {
+        if (cell && typeof cell.v === 'number') { cell.t = 'n'; cell.z = S.currencyFmt; }
+    }
+
+    function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+    function setCell(ws, r, c, v, style) {
+        var addr = XLSX.utils.encode_cell({r:r,c:c});
+        var cell = { v: v, t: typeof v === 'number' ? 'n' : 's' };
+        if (style) cell.s = deepClone(style);
+        ws[addr] = cell;
+    }
+
+    // ── Data ──
+    var a = getAnagraficaData();
+    var nomeAzienda = a.nome || 'Azienda non specificata';
+    var dimLabel = {micro:'Micro',piccola:'Piccola',media:'Media',grande:'Grande'}[a.dimensione] || '-';
+    var regLabel = nomiRegioni[a.regione] || '-';
+    var settLabel = a.settore ? document.querySelector('#gen_settore option[value="'+a.settore+'"]').textContent : '-';
+    var tipoLabel = a.tipologia ? document.querySelector('#gen_tipologia_progetto option[value="'+a.tipologia+'"]').textContent : '-';
+    var oggi = new Date();
+    var dataStr = oggi.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+    var assets = getAssetData().filter(function(x){ return x.importo > 0; });
+    var zes = window._risultatoZES;
+
+    // Pre-compute cumulo data for Dashboard
+    var totBeni = 0;
+    assets.forEach(function(b){ totBeni += b.importo; });
+
+    var creditoNetto = (zes && zes.calcolato) ? zes.creditoNetto : 0;
+    var pctIntensita = (zes && zes.calcolato) ? zes.pctIntensita : 0;
+
+    // Cumulo pre-calc
+    var dimInt = (a.dimensione === 'micro') ? 'piccola' : a.dimensione;
+    var pctZ = (zes && zes.calcolato && zes.regione === a.regione && zes.dimensione === a.dimensione) ? zes.pctIntensita : (intensita[a.regione] ? intensita[a.regione][dimInt] : 0);
+    var altriAG = parseFloat(document.getElementById('calc_altri_aiuti').value) || 0;
+    var altreAG = parseFloat(document.getElementById('calc_altre_agev').value) || 0;
+    var totFabL = assets.filter(function(x){ return tipologieFabbricati.includes(x.tipo); }).reduce(function(s,x){ return s+x.importo; }, 0);
+    var totAltriL = assets.reduce(function(s,x){ return s+x.importo; }, 0) - totFabL;
+    var ratioF = totFabL > 0 ? Math.min(totFabL, totAltriL) / totFabL : 1;
+
+    var totC=0, totCZ=0, totBI=0, totRI=0, totBaseGlob=0;
+    var tmpR = [];
+    assets.forEach(function(x,i) {
+        var isImm = tipologieFabbricati.includes(x.tipo);
+        var cAg = isImm ? x.importo * ratioF : x.importo;
+        var cZ = cAg * (pctZ / 100);
+        var bI = 0;
+        if (x.iper) {
+            var totAll = assets.reduce(function(s,y){ return s+y.importo; }, 0);
+            var qAA = totAll > 0 ? (altriAG+altreAG)*(cAg/totAll) : 0;
+            bI = Math.max(0, cAg - cZ - qAA);
+            totBaseGlob += bI;
+        }
+        totC += cAg; totCZ += cZ;
+        tmpR.push({i:i, desc: x.desc||'Bene n.'+(i+1), cAg:cAg, cZ:cZ, bI:bI, hasI:!!x.iper, importo:x.importo});
+    });
+    var risG = (assets.length > 0 && totBaseGlob > 0) ? calcolaIperammortamento(totBaseGlob, 0) : {maggiorazione:0};
+    tmpR.forEach(function(r) {
+        var magg=0, risp=0;
+        if (r.hasI && totBaseGlob > 0) { magg = risG.maggiorazione * (r.bI / totBaseGlob); risp = magg * (a.aliquota / 100); }
+        totBI += r.bI; totRI += risp;
+        r.magg = magg; r.risp = risp;
+    });
+    var beneficioComplessivo = totCZ + totRI;
+
+    var wb = XLSX.utils.book_new();
+
+    // ══════════════════════════════════════════
+    // SHEET 1: DASHBOARD (NEW)
+    // ══════════════════════════════════════════
+    var wsDash = {};
+    var dashMaxR = 0;
+    var dashMaxC = 21; // A through V (0-21)
+
+    // Row 0: Title merged A-F
+    for (var c = 0; c <= 5; c++) { setCell(wsDash, 0, c, c === 0 ? 'CRUSCOTTO ZES UNICA 2026-2028' : '', S.title); }
+    wsDash['!merges'] = [{s:{r:0,c:0},e:{r:0,c:5}}];
+
+    // Row 1: Subtitle
+    for (var c = 0; c <= 5; c++) { setCell(wsDash, 1, c, c === 0 ? 'Report generato il ' + dataStr : '', S.subtitle); }
+    wsDash['!merges'].push({s:{r:1,c:0},e:{r:1,c:5}});
+
+    // Row 2: empty
+    // Row 3: RIEPILOGO GENERALE header
+    for (var c = 0; c <= 5; c++) { setCell(wsDash, 3, c, c === 0 ? 'RIEPILOGO GENERALE' : '', S.sectionHeader); }
+    wsDash['!merges'].push({s:{r:3,c:0},e:{r:3,c:5}});
+
+    // Rows 4-11: Key metrics
+    var dashMetrics = [
+        ['Denominazione', nomeAzienda, false],
+        ['Regione', regLabel, false],
+        ['Dimensione impresa', dimLabel, false],
+        ['Investimento totale', totBeni, true],
+        ['Credito ZES netto', creditoNetto, true],
+        ['Risparmio iperammortamento', totRI, true],
+        ['Beneficio complessivo', beneficioComplessivo, true],
+        ['Intensit\u00e0 applicata', pctIntensita + '%', false]
+    ];
+    dashMetrics.forEach(function(m, idx) {
+        var r = 4 + idx;
+        var lblStyle = deepClone(S.labelCell);
+        lblStyle.alignment = {horizontal:"left",vertical:"center"};
+        setCell(wsDash, r, 0, m[0], lblStyle);
+        var valStyle;
+        if (m[2]) {
+            valStyle = deepClone(S.valueCellCurr);
+            valStyle.numFmt = S.currencyFmt;
+            var cell = wsDash[XLSX.utils.encode_cell({r:r,c:1})];
+            setCell(wsDash, r, 1, m[1], valStyle);
+            wsDash[XLSX.utils.encode_cell({r:r,c:1})].z = S.currencyFmt;
+        } else {
+            valStyle = deepClone(S.valueCell);
+            setCell(wsDash, r, 1, m[1], valStyle);
+        }
+    });
+
+    // Row 13: empty
+    // Row 14: COMPOSIZIONE INVESTIMENTO header
+    var compHeaderRow = 14;
+    for (var c = 0; c <= 5; c++) { setCell(wsDash, compHeaderRow, c, c === 0 ? 'COMPOSIZIONE INVESTIMENTO' : '', S.sectionHeader); }
+    wsDash['!merges'].push({s:{r:compHeaderRow,c:0},e:{r:compHeaderRow,c:5}});
+
+    // Rows 15+: asset list
+    var assetStartRow = 15;
+    assets.forEach(function(b, idx) {
+        var r = assetStartRow + idx;
+        var rowStyle = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+        var lblS = deepClone(rowStyle); lblS.font = deepClone(rowStyle.font); lblS.font.bold = true;
+        setCell(wsDash, r, 0, b.desc || 'Bene n.'+(idx+1), lblS);
+        var valS = deepClone(rowStyle); valS.alignment = {horizontal:"right"}; valS.numFmt = S.currencyFmt;
+        setCell(wsDash, r, 1, b.importo, valS);
+        wsDash[XLSX.utils.encode_cell({r:r,c:1})].z = S.currencyFmt;
+    });
+
+    // Bar chart section
+    var barHeaderRow = assetStartRow + assets.length + 1;
+    setCell(wsDash, barHeaderRow, 0, 'DISTRIBUZIONE INVESTIMENTO', deepClone(S.sectionHeader));
+    for (var c = 1; c <= 21; c++) { setCell(wsDash, barHeaderRow, c, '', deepClone(S.sectionHeader)); }
+    wsDash['!merges'].push({s:{r:barHeaderRow,c:0},e:{r:barHeaderRow,c:21}});
+
+    // Column labels for chart: col 0 = description, col 1 = empty, col 2-21 = bar (20 cells), col 22 = percentage
+    var barStartRow = barHeaderRow + 1;
+    assets.forEach(function(b, idx) {
+        var r = barStartRow + idx;
+        var pct = totBeni > 0 ? (b.importo / totBeni * 100) : 0;
+        var barLength = Math.round(pct / 100 * 20);
+        if (barLength < 1 && pct > 0) barLength = 1;
+
+        var descStyle = deepClone(S.labelCell); descStyle.alignment = {horizontal:"left"};
+        setCell(wsDash, r, 0, b.desc || 'Bene n.'+(idx+1), descStyle);
+        setCell(wsDash, r, 1, '', deepClone(S.dataEven));
+
+        for (var c = 2; c <= 21; c++) {
+            if (c - 2 < barLength) {
+                setCell(wsDash, r, c, '', deepClone(S.barFill));
+            } else {
+                setCell(wsDash, r, c, '', deepClone(S.barEmpty));
+            }
+        }
+        // Percentage label
+        var pctStyle = deepClone(S.valueCell); pctStyle.font = {bold:true,sz:10,name:"Calibri",color:{rgb:"3A1F8C"}};
+        setCell(wsDash, r, 22, pct.toFixed(1) + '%', pctStyle);
+    });
+
+    dashMaxR = barStartRow + assets.length;
+
+    // Set ref and cols
+    wsDash['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0},e:{r:dashMaxR,c:22}});
+    wsDash['!cols'] = [{wch:28},{wch:18}];
+    for (var c = 2; c <= 21; c++) { wsDash['!cols'].push({wch:3}); }
+    wsDash['!cols'].push({wch:8}); // col 22 for pct
+    wsDash['!rows'] = [{hpt:30},{hpt:18}]; // title row height
+    XLSX.utils.book_append_sheet(wb, wsDash, 'Dashboard');
+
+    // ══════════════════════════════════════════
+    // SHEET 2: ANAGRAFICA
+    // ══════════════════════════════════════════
+    var wsAna = {};
+    var anaM = [];
+
+    // Row 0: Title merged A-B
+    setCell(wsAna, 0, 0, 'CRUSCOTTO ZES UNICA 2026-2028 \u2014 REPORT', S.title);
+    setCell(wsAna, 0, 1, '', S.title);
+    anaM.push({s:{r:0,c:0},e:{r:0,c:1}});
+
+    // Row 1: Date
+    setCell(wsAna, 1, 0, 'Generato il ' + dataStr, S.subtitle);
+    setCell(wsAna, 1, 1, '', S.subtitle);
+    anaM.push({s:{r:1,c:0},e:{r:1,c:1}});
+
+    // Row 3: Section header
+    setCell(wsAna, 3, 0, 'ANAGRAFICA IMPRESA', S.accentHeader);
+    setCell(wsAna, 3, 1, '', S.accentHeader);
+    anaM.push({s:{r:3,c:0},e:{r:3,c:1}});
+
+    // Row 4: Column headers
+    setCell(wsAna, 4, 0, 'Campo', S.colHeader);
+    setCell(wsAna, 4, 1, 'Valore', S.colHeader);
+
+    // Data rows
+    var anaRows = [
         ['Denominazione', nomeAzienda],
         ['Dimensione impresa', dimLabel],
         ['Regione', regLabel],
@@ -1989,177 +2296,358 @@ function esportaExcel() {
         ['Tipologia progetto', tipoLabel],
         ['Impresa in difficolt\u00e0', a.inDifficolta === 'si' ? 'S\u00ec' : (a.inDifficolta === 'no' ? 'No' : '-')],
         ['DURC regolare', a.durc === 'si' ? 'S\u00ec' : (a.durc === 'no' ? 'No' : '-')],
-        ['Aliquota IRES/IRPEF (%)', a.aliquota],
+        ['Aliquota IRES/IRPEF (%)', a.aliquota]
     ];
-    const ws1 = XLSX.utils.aoa_to_sheet(anaData);
-    ws1['!cols'] = [{wch:30},{wch:45}];
-    XLSX.utils.book_append_sheet(wb, ws1, 'Anagrafica');
-
-    // ── SHEET 2: BENI INVESTIMENTO ──
-    const assets = getAssetData().filter(x => x.importo > 0);
-    const beniHeader = ['#','Descrizione','Importo (\u20ac)','Tipologia Bene','Categoria ZES','Iperammortamento','Coeff. Amm. (%)'];
-    const beniRows = [['ELENCO BENI INVESTIMENTO'],[],beniHeader];
-    let totBeni = 0;
-    assets.forEach((b,i) => {
-        totBeni += b.importo;
-        beniRows.push([
-            i+1,
-            b.desc || 'Bene n.'+(i+1),
-            b.importo,
-            tipologieBene[b.tipo] || '-',
-            categorieZES[b.cat] || '-',
-            b.iper ? tipologieIper[b.iper] : 'No',
-            b.iper ? (b.coeffAmm || 20) : ''
-        ]);
+    anaRows.forEach(function(row, idx) {
+        var r = 5 + idx;
+        var rowStyle = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+        var lbl = deepClone(S.labelCell);
+        lbl.fill = deepClone(rowStyle.fill || {fgColor:{rgb:"FFFFFF"}});
+        lbl.font = {bold:true,sz:10,name:"Calibri",color:{rgb:"12112E"}};
+        lbl.border = deepClone(thinBorder);
+        setCell(wsAna, r, 0, row[0], lbl);
+        var val = deepClone(rowStyle);
+        val.alignment = {horizontal:"right"};
+        val.border = deepClone(thinBorder);
+        setCell(wsAna, r, 1, row[1], val);
     });
-    beniRows.push(['','TOTALE', totBeni,'','','','']);
-    const ws2 = XLSX.utils.aoa_to_sheet(beniRows);
-    ws2['!cols'] = [{wch:5},{wch:35},{wch:18,numFmt:'#,##0.00'},{wch:22},{wch:28},{wch:35},{wch:12}];
-    // Format importo column as numbers
-    const rng2 = XLSX.utils.decode_range(ws2['!ref']);
-    for (let r = 3; r <= rng2.e.r; r++) {
-        const cell = ws2[XLSX.utils.encode_cell({r:r,c:2})];
-        if (cell && typeof cell.v === 'number') { cell.t = 'n'; cell.z = '#,##0.00'; }
-    }
-    XLSX.utils.book_append_sheet(wb, ws2, 'Beni Investimento');
 
-    // ── SHEET 3: CALCOLO ZES ──
-    const zes = window._risultatoZES;
-    const calcRows = [['CALCOLO CREDITO D\'IMPOSTA ZES'],[]];
+    wsAna['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0},e:{r:5+anaRows.length-1,c:1}});
+    wsAna['!merges'] = anaM;
+    wsAna['!cols'] = [{wch:30},{wch:45}];
+    wsAna['!rows'] = [{hpt:28}];
+    XLSX.utils.book_append_sheet(wb, wsAna, 'Anagrafica');
+
+    // ══════════════════════════════════════════
+    // SHEET 3: BENI INVESTIMENTO
+    // ══════════════════════════════════════════
+    var wsBeni = {};
+    var beniM = [];
+
+    // Row 0: Title merged A-G
+    for (var c = 0; c <= 6; c++) { setCell(wsBeni, 0, c, c === 0 ? 'ELENCO BENI INVESTIMENTO' : '', S.title); }
+    beniM.push({s:{r:0,c:0},e:{r:0,c:6}});
+
+    // Row 2: Column headers
+    var beniHeaders = ['#','Descrizione','Importo (\u20ac)','Tipologia Bene','Categoria ZES','Iperammortamento','Coeff. Amm. (%)'];
+    beniHeaders.forEach(function(h, c) { setCell(wsBeni, 2, c, h, S.colHeader); });
+
+    // Data rows
+    var totBeniCalc = 0;
+    assets.forEach(function(b, idx) {
+        var r = 3 + idx;
+        var rs = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+        totBeniCalc += b.importo;
+
+        setCell(wsBeni, r, 0, idx+1, rs);
+        setCell(wsBeni, r, 1, b.desc || 'Bene n.'+(idx+1), rs);
+        var impStyle = deepClone(rs); impStyle.alignment = {horizontal:"right"}; impStyle.numFmt = S.currencyFmt;
+        setCell(wsBeni, r, 2, b.importo, impStyle);
+        wsBeni[XLSX.utils.encode_cell({r:r,c:2})].z = S.currencyFmt;
+        setCell(wsBeni, r, 3, tipologieBene[b.tipo] || '-', rs);
+        setCell(wsBeni, r, 4, categorieZES[b.cat] || '-', rs);
+        setCell(wsBeni, r, 5, b.iper ? tipologieIper[b.iper] : 'No', rs);
+        setCell(wsBeni, r, 6, b.iper ? (b.coeffAmm || 20) : '', rs);
+    });
+
+    // Totale row
+    var totRow = 3 + assets.length;
+    setCell(wsBeni, totRow, 0, '', S.totalRow);
+    setCell(wsBeni, totRow, 1, 'TOTALE', S.totalRow);
+    var totStyle = deepClone(S.totalRow); totStyle.alignment = {horizontal:"right"}; totStyle.numFmt = S.currencyFmt;
+    totStyle.font = deepClone(S.totalRow.font); totStyle.font.color = {rgb:"00CBA8"};
+    setCell(wsBeni, totRow, 2, totBeniCalc, totStyle);
+    wsBeni[XLSX.utils.encode_cell({r:totRow,c:2})].z = S.currencyFmt;
+    for (var c = 3; c <= 6; c++) { setCell(wsBeni, totRow, c, '', S.totalRow); }
+
+    wsBeni['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0},e:{r:totRow,c:6}});
+    wsBeni['!merges'] = beniM;
+    wsBeni['!cols'] = [{wch:5},{wch:35},{wch:18},{wch:22},{wch:28},{wch:35},{wch:12}];
+    wsBeni['!rows'] = [{hpt:28}];
+    XLSX.utils.book_append_sheet(wb, wsBeni, 'Beni Investimento');
+
+    // ══════════════════════════════════════════
+    // SHEET 4: CALCOLO ZES
+    // ══════════════════════════════════════════
+    var wsCalc = {};
+    var calcM = [];
+
+    // Row 0: Title
+    setCell(wsCalc, 0, 0, 'CALCOLO CREDITO D\'IMPOSTA ZES', S.title);
+    setCell(wsCalc, 0, 1, '', S.title);
+    calcM.push({s:{r:0,c:0},e:{r:0,c:1}});
+
+    var calcMaxR = 1;
     if (zes && zes.calcolato) {
-        calcRows.push(['Voce','Valore']);
-        calcRows.push(['Regione', nomiRegioni[zes.regione] || zes.regione]);
-        calcRows.push(['Dimensione', dimLabel]);
-        calcRows.push(['Investimento totale (\u20ac)', zes.totInvestimento]);
-        calcRows.push(['Investimento agevolabile (\u20ac)', zes.totAgevolabile]);
-        calcRows.push(['Intensit\u00e0 applicata (%)', zes.pctIntensita]);
-        calcRows.push(['Credito lordo (\u20ac)', zes.creditoLordo]);
-        calcRows.push(['(-) Altri aiuti di Stato (\u20ac)', zes.altriAiuti]);
-        calcRows.push(['CREDITO ZES NETTO (\u20ac)', zes.creditoNetto]);
-        const max75 = zes.totAgevolabile * 0.75;
-        const spazio = Math.max(0, max75 - zes.altriAiuti - zes.altreAgev);
-        const fruib = Math.min(zes.creditoNetto, spazio);
-        calcRows.push([]);
-        calcRows.push(['Massimo aiuto pubblico 75% GBER (\u20ac)', max75]);
-        calcRows.push(['(-) Altri aiuti computati (\u20ac)', zes.altriAiuti + zes.altreAgev]);
-        calcRows.push(['CREDITO EFFETTIVAMENTE FRUIBILE (\u20ac)', fruib]);
-        calcRows.push(['Contributo proprio minimo 25% (\u20ac)', zes.totAgevolabile * 0.25]);
-    } else {
-        calcRows.push(['Calcolo ZES non ancora eseguito.']);
-    }
-    const ws3 = XLSX.utils.aoa_to_sheet(calcRows);
-    ws3['!cols'] = [{wch:42},{wch:22}];
-    // Format numeric cells
-    const rng3 = XLSX.utils.decode_range(ws3['!ref']);
-    for (let r = 0; r <= rng3.e.r; r++) {
-        const cell = ws3[XLSX.utils.encode_cell({r:r,c:1})];
-        if (cell && typeof cell.v === 'number') { cell.t = 'n'; cell.z = '#,##0.00'; }
-    }
-    XLSX.utils.book_append_sheet(wb, ws3, 'Calcolo ZES');
+        // Row 2: Column headers
+        setCell(wsCalc, 2, 0, 'Voce', S.colHeader);
+        setCell(wsCalc, 2, 1, 'Valore', S.colHeader);
 
-    // ── SHEET 4: CUMULO ──
-    const cumuloRows = [['CUMULO ZES + IPERAMMORTAMENTO'],[]];
-    if (assets.length > 0 && a.regione && a.dimensione) {
-        const dimInt = (a.dimensione === 'micro') ? 'piccola' : a.dimensione;
-        const pctZ = (zes && zes.calcolato && zes.regione === a.regione && zes.dimensione === a.dimensione) ? zes.pctIntensita : (intensita[a.regione] ? intensita[a.regione][dimInt] : 0);
-        const altriAG = parseFloat(document.getElementById('calc_altri_aiuti').value) || 0;
-        const altreAG = parseFloat(document.getElementById('calc_altre_agev').value) || 0;
-        const totFabL2 = assets.filter(x => tipologieFabbricati.includes(x.tipo)).reduce((s,x) => s+x.importo, 0);
-        const totAltri2 = assets.reduce((s,x) => s+x.importo, 0) - totFabL2;
-        const ratioF2 = totFabL2 > 0 ? Math.min(totFabL2, totAltri2) / totFabL2 : 1;
+        var calcData = [
+            ['Regione', nomiRegioni[zes.regione] || zes.regione, false],
+            ['Dimensione', dimLabel, false],
+            ['Investimento totale (\u20ac)', zes.totInvestimento, true],
+            ['Investimento agevolabile (\u20ac)', zes.totAgevolabile, true],
+            ['Intensit\u00e0 applicata (%)', zes.pctIntensita, false],
+            ['Credito lordo (\u20ac)', zes.creditoLordo, true],
+            ['(-) Altri aiuti di Stato (\u20ac)', zes.altriAiuti, true],
+            ['CREDITO ZES NETTO (\u20ac)', zes.creditoNetto, true]
+        ];
+        calcData.forEach(function(row, idx) {
+            var r = 3 + idx;
+            var isResult = (idx === calcData.length - 1);
+            var rowBase = idx % 2 === 0 ? S.dataEven : S.dataOdd;
 
-        cumuloRows.push(['#','Bene','Costo agevolabile (\u20ac)','Credito ZES (\u20ac)','Base Iper (\u20ac)','Maggiorazione Iper (\u20ac)','Risparmio fiscale Iper (\u20ac)','Beneficio Totale (\u20ac)']);
+            var lblS = deepClone(S.labelCell);
+            lblS.fill = deepClone(rowBase.fill || {fgColor:{rgb:"FFFFFF"}});
+            if (isResult) { lblS = deepClone(S.accentResult); lblS.alignment = {horizontal:"left"}; }
+            setCell(wsCalc, r, 0, row[0], lblS);
 
-        let totC=0, totCZ=0, totBI=0, totRI=0, totBaseGlob2=0;
-        let tmpR = [];
-        assets.forEach((x,i) => {
-            const isImm = tipologieFabbricati.includes(x.tipo);
-            const cAg = isImm ? x.importo * ratioF2 : x.importo;
-            const cZ = cAg * (pctZ / 100);
-            let bI = 0;
-            if (x.iper) {
-                const qAA = assets.reduce((s,y) => s+y.importo, 0) > 0 ? (altriAG+altreAG)*(cAg/assets.reduce((s,y)=>s+y.importo,0)) : 0;
-                bI = Math.max(0, cAg - cZ - qAA);
-                totBaseGlob2 += bI;
+            var valS;
+            if (isResult) {
+                valS = deepClone(S.accentResult);
+            } else {
+                valS = deepClone(rowBase); valS.alignment = {horizontal:"right"}; valS.border = deepClone(thinBorder);
             }
-            totC += cAg; totCZ += cZ;
-            tmpR.push({i, desc: x.desc||'Bene n.'+(i+1), cAg, cZ, bI, hasI:!!x.iper});
+            setCell(wsCalc, r, 1, row[1], valS);
+            if (row[2]) { var cc2 = wsCalc[XLSX.utils.encode_cell({r:r,c:1})]; if(cc2) cc2.z = S.currencyFmt; }
         });
-        const risG2 = calcolaIperammortamento(totBaseGlob2, 0);
-        tmpR.forEach(r => {
-            let magg=0, risp=0;
-            if (r.hasI && totBaseGlob2 > 0) { magg = risG2.maggiorazione * (r.bI / totBaseGlob2); risp = magg * (a.aliquota / 100); }
-            totBI += r.bI; totRI += risp;
-            cumuloRows.push([r.i+1, r.desc, r.cAg, r.cZ, r.hasI?r.bI:'', r.hasI?magg:'', r.hasI?risp:'', r.cZ+risp]);
-        });
-        cumuloRows.push(['','TOTALE', totC, totCZ, totBI, risG2.maggiorazione, totRI, totCZ+totRI]);
-        cumuloRows.push([]);
-        cumuloRows.push(['Beneficio complessivo (ZES + Iper) \u20ac', totCZ+totRI]);
-    } else {
-        cumuloRows.push(['Inserire beni e calcolare il credito ZES prima di esportare il cumulo.']);
-    }
-    const ws4 = XLSX.utils.aoa_to_sheet(cumuloRows);
-    ws4['!cols'] = [{wch:5},{wch:30},{wch:20},{wch:18},{wch:18},{wch:22},{wch:22},{wch:20}];
-    const rng4 = XLSX.utils.decode_range(ws4['!ref']);
-    for (let r = 0; r <= rng4.e.r; r++) {
-        for (let c = 2; c <= 7; c++) {
-            const cell = ws4[XLSX.utils.encode_cell({r:r,c:c})];
-            if (cell && typeof cell.v === 'number') { cell.t = 'n'; cell.z = '#,##0.00'; }
-        }
-    }
-    XLSX.utils.book_append_sheet(wb, ws4, 'Cumulo ZES+Iper');
 
-    // ── SHEET 5: SCADENZE ──
-    const scadRows = [
-        ['SCADENZE E ADEMPIMENTI'],
-        [],
-        ['Adempimento','Anno 2026','Anno 2027','Anno 2028'],
+        var gberRow = 3 + calcData.length + 1;
+        var max75 = zes.totAgevolabile * 0.75;
+        var spazio = Math.max(0, max75 - zes.altriAiuti - zes.altreAgev);
+        var fruib = Math.min(zes.creditoNetto, spazio);
+
+        var gberData = [
+            ['Massimo aiuto pubblico 75% GBER (\u20ac)', max75, true],
+            ['(-) Altri aiuti computati (\u20ac)', zes.altriAiuti + zes.altreAgev, true],
+            ['CREDITO EFFETTIVAMENTE FRUIBILE (\u20ac)', fruib, true],
+            ['Contributo proprio minimo 25% (\u20ac)', zes.totAgevolabile * 0.25, true]
+        ];
+        gberData.forEach(function(row, idx) {
+            var r = gberRow + idx;
+            var isResult = (idx === 2);
+            var rowBase = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+
+            var lblS = deepClone(S.labelCell);
+            lblS.fill = deepClone(rowBase.fill || {fgColor:{rgb:"FFFFFF"}});
+            if (isResult) { lblS = deepClone(S.accentResult); lblS.alignment = {horizontal:"left"}; }
+            setCell(wsCalc, r, 0, row[0], lblS);
+
+            var valS;
+            if (isResult) {
+                valS = deepClone(S.accentResult);
+            } else {
+                valS = deepClone(rowBase); valS.alignment = {horizontal:"right"}; valS.border = deepClone(thinBorder);
+            }
+            setCell(wsCalc, r, 1, row[1], valS);
+            if (row[2]) { var cc = wsCalc[XLSX.utils.encode_cell({r:r,c:1})]; if(cc) cc.z = S.currencyFmt; }
+        });
+        calcMaxR = gberRow + gberData.length - 1;
+    } else {
+        setCell(wsCalc, 2, 0, 'Calcolo ZES non ancora eseguito.', deepClone(S.labelCell));
+        calcMaxR = 2;
+    }
+
+    wsCalc['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0},e:{r:calcMaxR,c:1}});
+    wsCalc['!merges'] = calcM;
+    wsCalc['!cols'] = [{wch:42},{wch:22}];
+    wsCalc['!rows'] = [{hpt:28}];
+    XLSX.utils.book_append_sheet(wb, wsCalc, 'Calcolo ZES');
+
+    // ══════════════════════════════════════════
+    // SHEET 5: CUMULO ZES+IPER
+    // ══════════════════════════════════════════
+    var wsCum = {};
+    var cumM = [];
+
+    // Row 0: Title
+    for (var c = 0; c <= 7; c++) { setCell(wsCum, 0, c, c === 0 ? 'CUMULO ZES + IPERAMMORTAMENTO' : '', S.title); }
+    cumM.push({s:{r:0,c:0},e:{r:0,c:7}});
+
+    var cumMaxR = 1;
+    if (assets.length > 0 && a.regione && a.dimensione) {
+        // Row 2: Headers
+        var cumHeaders = ['#','Bene','Costo agevolabile (\u20ac)','Credito ZES (\u20ac)','Base Iper (\u20ac)','Maggiorazione Iper (\u20ac)','Risparmio fiscale Iper (\u20ac)','Beneficio Totale (\u20ac)'];
+        cumHeaders.forEach(function(h, c) {
+            var style = (c >= 4 && c <= 6) ? S.colHeaderIper : S.colHeader;
+            setCell(wsCum, 2, c, h, style);
+        });
+
+        // Data rows
+        tmpR.forEach(function(r, idx) {
+            var row = 3 + idx;
+            var rs = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+            setCell(wsCum, row, 0, r.i+1, rs);
+            setCell(wsCum, row, 1, r.desc, rs);
+
+            var vals = [r.cAg, r.cZ, r.hasI?r.bI:'', r.hasI?r.magg:'', r.hasI?r.risp:'', r.cZ+(r.risp||0)];
+            vals.forEach(function(v, ci) {
+                var cIdx = 2 + ci;
+                var cellStyle = deepClone(rs);
+                cellStyle.alignment = {horizontal:"right"};
+                if (typeof v === 'number') { cellStyle.numFmt = S.currencyFmt; }
+                setCell(wsCum, row, cIdx, v, cellStyle);
+                if (typeof v === 'number') { wsCum[XLSX.utils.encode_cell({r:row,c:cIdx})].z = S.currencyFmt; }
+            });
+        });
+
+        // Totale row
+        var cumTotRow = 3 + tmpR.length;
+        setCell(wsCum, cumTotRow, 0, '', S.totalRow);
+        setCell(wsCum, cumTotRow, 1, 'TOTALE', S.totalRow);
+        var cumTotVals = [totC, totCZ, totBI, risG.maggiorazione, totRI, totCZ+totRI];
+        cumTotVals.forEach(function(v, ci) {
+            var cIdx = 2 + ci;
+            var ts = deepClone(S.totalRow); ts.alignment = {horizontal:"right"}; ts.numFmt = S.currencyFmt;
+            setCell(wsCum, cumTotRow, cIdx, v, ts);
+            wsCum[XLSX.utils.encode_cell({r:cumTotRow,c:cIdx})].z = S.currencyFmt;
+        });
+
+        // Beneficio complessivo
+        var benRow = cumTotRow + 2;
+        var benLbl = deepClone(S.accentResult); benLbl.alignment = {horizontal:"left"};
+        setCell(wsCum, benRow, 0, 'Beneficio complessivo (ZES + Iper) \u20ac', benLbl);
+        var benVal = deepClone(S.accentResult);
+        setCell(wsCum, benRow, 1, totCZ+totRI, benVal);
+        wsCum[XLSX.utils.encode_cell({r:benRow,c:1})].z = S.currencyFmt;
+        for (var c = 2; c <= 7; c++) { setCell(wsCum, benRow, c, '', deepClone(S.accentResult)); }
+        cumM.push({s:{r:benRow,c:0},e:{r:benRow,c:7}});
+        cumMaxR = benRow;
+    } else {
+        setCell(wsCum, 2, 0, 'Inserire beni e calcolare il credito ZES prima di esportare il cumulo.', deepClone(S.labelCell));
+        cumMaxR = 2;
+    }
+
+    wsCum['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0},e:{r:cumMaxR,c:7}});
+    wsCum['!merges'] = cumM;
+    wsCum['!cols'] = [{wch:5},{wch:30},{wch:20},{wch:18},{wch:18},{wch:22},{wch:22},{wch:20}];
+    wsCum['!rows'] = [{hpt:28}];
+    XLSX.utils.book_append_sheet(wb, wsCum, 'Cumulo ZES+Iper');
+
+    // ══════════════════════════════════════════
+    // SHEET 6: SCADENZE
+    // ══════════════════════════════════════════
+    var wsScad = {};
+    var scadM = [];
+
+    // Row 0: Title
+    for (var c = 0; c <= 3; c++) { setCell(wsScad, 0, c, c === 0 ? 'SCADENZE E ADEMPIMENTI' : '', S.title); }
+    scadM.push({s:{r:0,c:0},e:{r:0,c:3}});
+
+    // Row 2: Headers
+    var scadHeaders = ['Adempimento','Anno 2026','Anno 2027','Anno 2028'];
+    scadHeaders.forEach(function(h, c) { setCell(wsScad, 2, c, h, S.colHeader); });
+
+    // Data
+    var scadData = [
         ['Comunicazione preventiva ZES','31/03 - 30/05/2026','31/03 - 30/05/2027','31/03 - 30/05/2028'],
         ['Comunicazione integrativa ZES','03/01 - 17/01/2027','03/01 - 17/01/2028','03/01 - 17/01/2029'],
         ['Periodo investimenti ZES','01/01 - 31/12/2026','01/01 - 31/12/2027','01/01 - 31/12/2028'],
         ['Investimenti Iperammortamento','01/01/2026 - 30/09/2028','',''],
-        ['Limite di spesa ZES','2.300 M\u20ac','1.000 M\u20ac','750 M\u20ac'],
-        [],
-        ['CHECKLIST DOCUMENTALE'],
-        [],
-        ['ZES: Comunicazione telematica via software Agenzia Entrate'],
-        ['ZES: Dichiarazione sostitutiva atto di notoriet\u00e0'],
-        ['ZES: Certificazione del revisore dei conti'],
-        ['ZES: Fatture elettroniche ricevute tramite SDI'],
-        ['ZES: DURC regolare e iscrizione Registro Imprese'],
-        ['ZES: Codice ATECO 2025'],
-        ['ZES: Documentazione antimafia (per crediti > 150.000 \u20ac)'],
-        ['Iper: Comunicazione e certificazioni tramite piattaforma GSE'],
-        ['Iper: Attestazione di interconnessione'],
-        ['Iper: Dichiarazione di conformit\u00e0 produttore (UE/SEE)'],
-        ['Cumulo: Documentazione non superamento costo sostenuto'],
+        ['Limite di spesa ZES','2.300 M\u20ac','1.000 M\u20ac','750 M\u20ac']
     ];
-    const ws5 = XLSX.utils.aoa_to_sheet(scadRows);
-    ws5['!cols'] = [{wch:52},{wch:22},{wch:22},{wch:22}];
-    XLSX.utils.book_append_sheet(wb, ws5, 'Scadenze');
+    scadData.forEach(function(row, idx) {
+        var r = 3 + idx;
+        var rs = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+        var lblS = deepClone(rs); lblS.font = {bold:true,sz:10,name:"Calibri",color:{rgb:"12112E"}}; lblS.border = deepClone(thinBorder);
+        setCell(wsScad, r, 0, row[0], lblS);
+        for (var c = 1; c <= 3; c++) {
+            var valS = deepClone(rs); valS.alignment = {horizontal:"center"}; valS.border = deepClone(thinBorder);
+            setCell(wsScad, r, c, row[c], valS);
+        }
+    });
 
-    // ── SHEET 6: INTENSITA' REGIONALI ──
-    const intRows = [
-        ['INTENSIT\u00c0 MASSIME DI AIUTO ZES (Carta Regionale 2022-2027)'],
-        [],
-        ['Regione','Piccola (\u226450M\u20ac)','Media (\u226450M\u20ac)','Grande (\u226450M\u20ac)','Zona'],
+    // Checklist section
+    var checkRow = 3 + scadData.length + 1;
+    setCell(wsScad, checkRow, 0, 'CHECKLIST DOCUMENTALE', S.sectionHeader);
+    for (var c = 1; c <= 3; c++) { setCell(wsScad, checkRow, c, '', S.sectionHeader); }
+    scadM.push({s:{r:checkRow,c:0},e:{r:checkRow,c:3}});
+
+    var checkItems = [
+        'ZES: Comunicazione telematica via software Agenzia Entrate',
+        'ZES: Dichiarazione sostitutiva atto di notoriet\u00e0',
+        'ZES: Certificazione del revisore dei conti',
+        'ZES: Fatture elettroniche ricevute tramite SDI',
+        'ZES: DURC regolare e iscrizione Registro Imprese',
+        'ZES: Codice ATECO 2025',
+        'ZES: Documentazione antimafia (per crediti > 150.000 \u20ac)',
+        'Iper: Comunicazione e certificazioni tramite piattaforma GSE',
+        'Iper: Attestazione di interconnessione',
+        'Iper: Dichiarazione di conformit\u00e0 produttore (UE/SEE)',
+        'Cumulo: Documentazione non superamento costo sostenuto'
     ];
-    const regMap = [
+    checkItems.forEach(function(item, idx) {
+        var r = checkRow + 2 + idx;
+        var rs = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+        var itemS = deepClone(rs); itemS.border = deepClone(thinBorder);
+        setCell(wsScad, r, 0, item, itemS);
+        for (var c = 1; c <= 3; c++) { setCell(wsScad, r, c, '', deepClone(rs)); }
+    });
+
+    var scadMaxR = checkRow + 2 + checkItems.length - 1;
+    wsScad['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0},e:{r:scadMaxR,c:3}});
+    wsScad['!merges'] = scadM;
+    wsScad['!cols'] = [{wch:52},{wch:22},{wch:22},{wch:22}];
+    wsScad['!rows'] = [{hpt:28}];
+    XLSX.utils.book_append_sheet(wb, wsScad, 'Scadenze');
+
+    // ══════════════════════════════════════════
+    // SHEET 7: INTENSITA' REGIONALI
+    // ══════════════════════════════════════════
+    var wsInt = {};
+    var intM = [];
+
+    // Row 0: Title
+    for (var c = 0; c <= 4; c++) { setCell(wsInt, 0, c, c === 0 ? 'INTENSIT\u00c0 MASSIME DI AIUTO ZES (Carta Regionale 2022-2027)' : '', S.title); }
+    intM.push({s:{r:0,c:0},e:{r:0,c:4}});
+
+    // Row 2: Headers
+    var intHeaders = ['Regione','Piccola (\u226450M\u20ac)','Media (\u226450M\u20ac)','Grande (\u226450M\u20ac)','Zona'];
+    intHeaders.forEach(function(h, c) { setCell(wsInt, 2, c, h, S.colHeader); });
+
+    var regMap = [
         ['Campania','campania','a)'],['Puglia','puglia','a)'],['Puglia (JTF)','puglia_jtf','a)+JTF'],
         ['Basilicata','basilicata','a)'],['Calabria','calabria','a)'],['Sicilia','sicilia','a)'],
         ['Sardegna','sardegna','a)'],['Sardegna (JTF)','sardegna_jtf','a)+JTF'],['Molise','molise','a)'],
         ['Abruzzo (c)','abruzzo','c)'],['Marche (c)','marche','c)'],['Umbria (c)','umbria','c)']
     ];
-    regMap.forEach(r => {
-        const d = intensita[r[1]];
-        intRows.push([r[0], d.piccola+'%', d.media+'%', d.grande+'%', r[2]]);
+    regMap.forEach(function(reg, idx) {
+        var r = 3 + idx;
+        var d = intensita[reg[1]];
+        var rs = idx % 2 === 0 ? S.dataEven : S.dataOdd;
+        var lblS = deepClone(rs); lblS.font = {bold:true,sz:10,name:"Calibri",color:{rgb:"12112E"}}; lblS.border = deepClone(thinBorder);
+        setCell(wsInt, r, 0, reg[0], lblS);
+
+        var valS = deepClone(rs); valS.alignment = {horizontal:"center"}; valS.border = deepClone(thinBorder);
+        setCell(wsInt, r, 1, d.piccola+'%', valS);
+        setCell(wsInt, r, 2, d.media+'%', deepClone(valS));
+        setCell(wsInt, r, 3, d.grande+'%', deepClone(valS));
+        setCell(wsInt, r, 4, reg[2], deepClone(valS));
+
+        // Highlight current region
+        if (reg[1] === a.regione) {
+            for (var c = 0; c <= 4; c++) {
+                var addr = XLSX.utils.encode_cell({r:r,c:c});
+                if (wsInt[addr]) {
+                    wsInt[addr].s.fill = {fgColor:{rgb:"ECEFFE"}};
+                    wsInt[addr].s.font = wsInt[addr].s.font || {};
+                    wsInt[addr].s.font.bold = true;
+                    wsInt[addr].s.font.color = {rgb:"3A1F8C"};
+                }
+            }
+        }
     });
-    const ws6 = XLSX.utils.aoa_to_sheet(intRows);
-    ws6['!cols'] = [{wch:20},{wch:18},{wch:18},{wch:18},{wch:12}];
-    XLSX.utils.book_append_sheet(wb, ws6, 'Intensit\u00e0 Regionali');
+
+    var intMaxR = 3 + regMap.length - 1;
+    wsInt['!ref'] = XLSX.utils.encode_range({s:{r:0,c:0},e:{r:intMaxR,c:4}});
+    wsInt['!merges'] = intM;
+    wsInt['!cols'] = [{wch:20},{wch:18},{wch:18},{wch:18},{wch:12}];
+    wsInt['!rows'] = [{hpt:28}];
+    XLSX.utils.book_append_sheet(wb, wsInt, 'Intensit\u00e0 Regionali');
 
     // Download
-    const fileName = 'Report_ZES_' + nomeAzienda.replace(/[^a-zA-Z0-9\u00C0-\u017F]/g,'_').substring(0,30) + '_' + oggi.toISOString().slice(0,10) + '.xlsx';
+    var fileName = 'Report_ZES_' + nomeAzienda.replace(/[^a-zA-Z0-9\u00C0-\u017F]/g,'_').substring(0,30) + '_' + oggi.toISOString().slice(0,10) + '.xlsx';
     XLSX.writeFile(wb, fileName);
 }
 </script>

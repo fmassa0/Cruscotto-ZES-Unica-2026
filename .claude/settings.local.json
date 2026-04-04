@@ -15,7 +15,8 @@
       "Bash(node -e ':*)",
       "Bash(rm -f generate-og.html og-image.svg)",
       "Bash(rm -rf node_modules package-lock.json)",
-      "Bash(ls -la *.png *.html)"
+      "Bash(ls -la *.png *.html)",
+      "Bash(wc -l \"/c/Users/massa/Repo GitHub/Cruscotto-ZES-Unica-2026\"/*.html)"
     ],
     "additionalDirectories": [
       "\\tmp",
